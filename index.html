@@ -3,31 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MUTTAM SOUQ SUPERMARKET ONLINE website</title>
+  <title>MUTTAM SOUQ SUPERMARKET ONLINE</title>
   <link rel="website icon" type="png" href="m.webp">
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: blue;
+      background: linear-gradient(90deg, #001f3f, #0074D9);
+      color: white;
     }
     header {
-      background-color: green;
-      color: white;
+      background: linear-gradient(90deg, #28a745, #1e7e34);
       padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: bold, sans-serif;
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+      text-transform: uppercase;
     }
     header .logo {
-      font-size: 24px;
-    }
-    header nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
+      font-size: 22px;
+      font-weight: bold;
     }
     .search-container {
       text-align: center;
@@ -37,1453 +34,1457 @@
       width: 50%;
       padding: 10px;
       font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      border-radius: 8px;
+      border: 2px solid #fff;
+      background: black;
+      color: white;
     }
     .product-list {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 20px;
       padding: 20px;
     }
     .product {
-      background-color: black;
-      color: white;
-      border: 1px solid #ddd;
+      background: black;
+      border: 2px solid #28a745;
       padding: 15px;
       text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 0 15px #28a745;
+      transition: 0.3s;
+    }
+    .product:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #28a745;
     }
     .product img {
       width: 100%;
-      height: 200px;
-      border-radius: 8px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid #28a745;
     }
-.product button {
-  background-color: #007bff;  /* Blue color */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-  border-radius: 5px;
-}
-
-.product button:hover {
-  background-color: yellow; /* Darker blue */
-  transform: scale(1.05); /* Slightly enlarge button */
-}
+    .product button {
+      background: linear-gradient(90deg, #ffcc00, #ff9900);
+      color: black;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .product button:hover {
+      box-shadow: 0 0 15px #ffcc00;
+      transform: scale(1.1);
+    }
     #cart {
       position: fixed;
       top: 20px;
       right: 20px;
-      background-color: yellow;
-      color: green;
+      background: #1a1a1a;
+      color: white;
       padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 250px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #ffcc00;
+      width: 280px;
       display: none;
     }
     #cart ul {
-      list-style-type: none;
+      list-style: none;
       padding: 0;
     }
     #cart ul li {
       padding: 5px 0;
+      border-bottom: 1px solid #ffcc00;
     }
     #cart p {
-      margin-top: 10px;
       font-weight: bold;
+      margin-top: 15px;
     }
     #proceed-btn {
-      background-color: red;
-      color: white;
+      background: linear-gradient(90deg, #ffcc00, #ff9900);
+      color: black;
       padding: 15px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 16px;
       width: 100%;
-      margin-top: 20px;
+      transition: 0.3s;
     }
     #proceed-btn:hover {
-      background-color: #e64a19;
+      box-shadow: 0 0 15px #ffcc00;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="logo">MUTTAM SOUQ-ONLINE SHOPPING
-      (if any product were missed or not displayed you can type in WhatsApp)
-    </div>
+    <div class="logo">MUTTAM SOUQ - ONLINE SHOPPING</div>
+    <span onclick="showCart()">🛒 Cart (<span id="cart-count">0</span>)</span>
   </header>
 
-  <!-- Search Bar -->
   <div class="search-container">
     <input type="text" id="search-bar" placeholder="Search for products..." onkeyup="searchProducts()">
   </div>
 
-<div class="product-list" id="product-list">
-  <div class="product" data-name="onion">
-    <img src="onion.webp" alt="Onion">
-    <h3>Onion</h3>
-    <p>Price: ₹40-70 per kg</p>
-    <button onclick="addToCart(1, 'Onion', 40)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="tomato">
-    <img src="tomato.webp" alt="Tomato">
-    <h3>Tomato</h3>
-    <p>Price: ₹20-50 per kg</p>
-    <button onclick="addToCart(2, 'Tomato', 20)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="potato">
-    <img src="potato.webp" alt="Potato">
-    <h3>Potato</h3>
-    <p>Price: ₹20</p>
-    <button onclick="addToCart(3, 'Potato', 20)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="green-chilli">
-    <img src="greenchilli.webp" alt="Green Chilli">
-    <h3>Green Chilli</h3>
-    <p>Price: ₹72</p>
-    <button onclick="addToCart(4, 'Green Chilli', 72)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="carrot">
-    <img src="carrot.webp" alt="Carrot">
-    <h3>Carrot</h3>
-    <p>Price: ₹37</p>
-    <button onclick="addToCart(4, 'Carrot', 37)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="cabbage">
-    <img src="cabbage.webp" alt="Cabbage">
-    <h3>Cabbage</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(5, 'Cabbage', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="beans">
-    <img src="beens.webp" alt="Beans">
-    <h3>Beans</h3>
-    <p>Price: ₹45</p>
-    <button onclick="addToCart(6, 'Beans', 45)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="pomegranate">
-    <img src="pomegrenate.webp" alt="Pomegranate">
-    <h3>Pomegranate</h3>
-    <p>Price: ₹55</p>
-    <button onclick="addToCart(7, 'Pomegranate', 55)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="big-banana">
-    <img src="bigbanana.webp" alt="Big Banana">
-    <h3>Big Banana</h3>
-    <p>Price: ₹5</p>
-    <button onclick="addToCart(1, 'Big Banana', 5)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="black-grapes">
-    <img src="blackgrapes.webp" alt="Black Grapes">
-    <h3>Black Grapes</h3>
-    <p>Price: ₹100</p>
-    <button onclick="addToCart(2, 'Black Grapes', 100)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="orange">
-    <img src="orange.webp" alt="Orange">
-    <h3>Orange</h3>
-    <p>Price: ₹20</p>
-    <button onclick="addToCart(3, 'Orange', 20)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="papaya">
-    <img src="papaya.webp" alt="Papaya">
-    <h3>Papaya</h3>
-    <p>Price: ₹72</p>
-    <button onclick="addToCart(4, 'Papaya', 72)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="green-grapes">
-    <img src="greengrapes.webp" alt="Green Grapes">
-    <h3>Green Grapes</h3>
-    <p>Price: ₹136</p>
-    <button onclick="addToCart(4, 'Green Grapes', 136)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="green-mango">
-    <img src="greenmango.webp" alt="Green Mango">
-    <h3>Green Mango</h3>
-    <p>Price: ₹37</p>
-    <button onclick="addToCart(4, 'Green Mango', 37)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="cucumber">
-    <img src="cucumber.webp" alt="Cucumber">
-    <h3>Cucumber</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(5, 'Cucumber', 10)">Add to Cart</button>
-</div>
-
-  
-  <div class="product" data-name="curry-leaves">
-    <img src="curryleaves.webp" alt="Curry Leaves">
-    <h3>Curry Leaves</h3>
-    <p>Price: ₹45</p>
-    <button onclick="addToCart(6, 'Curry Leaves', 45)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="kanthari">
-    <img src="kanthari.webp" alt="Kanthari">
-    <h3>Kanthari</h3>
-    <p>Price: ₹55</p>
-    <button onclick="addToCart(7, 'Kanthari', 55)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="gooseberry">
-    <img src="gooseberry.webp" alt="Gooseberry">
-    <h3>Gooseberry</h3>
-    <p>Price: ₹37</p>
-    <button onclick="addToCart(4, 'Gooseberry', 37)">Add to Cart</button>
-</div> 
-
-<div class="product" data-name="robusta">
-    <img src="robust.webp" alt="Robusta">
-    <h3>Robusta</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(5, 'Robusta', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="ginger">
-    <img src="ginger.webp" alt="Ginger">
-    <h3>Ginger</h3>
-    <p>Price: ₹45</p>
-    <button onclick="addToCart(6, 'Ginger', 45)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="garlic">
-    <img src="garlic.webp" alt="Garlic">
-    <h3>Garlic</h3>
-    <p>Price: ₹55</p>
-    <button onclick="addToCart(7, 'Garlic', 55)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="5-star">
-    <img src="5 star.jpg" alt="5 Star Chocolate">
-    <h3>5 Star</h3>
-    <p>Price: ₹5</p>
-    <button onclick="addToCart(1, '5 Star', 5)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="7up-2.25l">
-    <img src="7up 2.25l.jpg" alt="7up 2.25L">
-    <h3>7up 2.25L</h3>
-    <p>Price: ₹100</p>
-    <button onclick="addToCart(2, '7up 2.25L', 100)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="7up">
-    <img src="7up.jpg" alt="7up">
-    <h3>7up</h3>
-    <p>Price: ₹20</p>
-    <button onclick="addToCart(3, '7up', 20)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="aashirvaad-atta">
-    <img src="atta.webp" alt="Aashirvaad Atta 1kg">
-    <h3>Aashirvaad Atta (1kg)</h3>
-    <p>Price: ₹72</p>
-    <button onclick="addToCart(4, 'Aashirvaad Atta', 72)">Add to Cart</button>
-</div>
-
-
-  <div class="product" data-name="aashirvaad aatta (2kg)">
-    <img src="atta.webp" alt="Aashirvaad Atta 2kg">
-    <h3>Aashirvaad Atta (2kg)</h3>
-    <p>Price: ₹136</p>
-    <button onclick="addToCart(1, 'Aashirvaad Atta (2kg)', 136)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="aashirvaad aatta (3kg)">
-    <img src="atta.webp" alt="Aashirvaad Atta 3kg">
-    <h3>Aashirvaad Atta (3kg)</h3>
-    <p>Price: ₹37</p>
-    <button onclick="addToCart(2, 'Aashirvaad Atta (3kg)', 37)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="agnee">
-    <img src="agnee.jpg" alt="Agnee">
-    <h3>Agnee</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(3, 'Agnee', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="aldan kubboos">
-    <img src="aldan kubboos.jpg" alt="Aldan Kubboos">
-    <h3>Aldan Kubboos</h3>
-    <p>Price: ₹45</p>
-    <button onclick="addToCart(4, 'Aldan Kubboos', 45)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="amul dark chocolate">
-    <img src="amul dark chocolate.jpg" alt="Amul Dark Chocolate">
-    <h3>Amul Dark Chocolate</h3>
-    <p>Price: ₹55</p>
-    <button onclick="addToCart(5, 'Amul Dark Chocolate', 55)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="amul milk chocolate">
-    <img src="amul milk chocolate.jpg" alt="Amul Milk Chocolate">
-    <h3>Amul Milk Chocolate</h3>
-    <p>Price: ₹55</p>
-    <button onclick="addToCart(6, 'Amul Milk Chocolate', 55)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="amul mithai mate">
-    <img src="amul mithai mate.jpg" alt="Amul Mithai Mate">
-    <h3>Amul Mithai Mate</h3>
-    <p>Price: ₹126</p>
-    <button onclick="addToCart(7, 'Amul Mithai Mate', 126)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="apples (1kg)">
-    <img src="apples.jpg" alt="Apples 1kg">
-    <h3>Apples (1kg)</h3>
-    <p>Price: ₹200</p>
-    <button onclick="addToCart(8, 'Apples (1kg)', 200)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="appy kiwi fruit crush">
-    <img src="appy kiwi fruit crush.jpg" alt="Appy Kiwi Fruit Crush">
-    <h3>Appy Kiwi Fruit Crush</h3>
-    <p>Price: ₹190</p>
-    <button onclick="addToCart(9, 'Appy Kiwi Fruit Crush', 190)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="avocado">
-    <img src="avocado.avif" alt="Avocado 1kg">
-    <h3>Avocado (1kg)</h3>
-    <p>Price: ₹450</p>
-    <button onclick="addToCart(10, 'Avocado (1kg)', 450)">Add to Cart</button>
-</div>
-
-
-<div class="product"data-name="bakers alfaham masala">
-<img src="bakers alfaham masalal.jpg" alt="Product 7">
-<h3>bakers alfaham masala</h3>
-<p>Price: ₹90</p>
-<button onclick="addToCart(7, 'bakers alfaham masala', 90)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers bread crumbs">
-<img src="bakers bread crumbs.jpg" alt="Product 8">
-<h3>bakers bread crumbs</h3>
-<p>Price: ₹30</p>
-<button onclick="addToCart(8, 'bakers bread crumbs', 30)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers butter chicken masala">
-<img src="bakers butter chicken masala.jpg" alt="Product 9">
-<h3>bakers butter chicken masala</h3>
-<p>Price: ₹50</p>
-<button onclick="addToCart(9, 'bakers butter chicken masala', 50)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers chat masala">
-<img src="bakers chat masala.jpg" alt="Product 10">
-<h3>bakers chat masala</h3>
-<p>Price: ₹80</p>
-<button onclick="addToCart(10, 'bakers chat masala', 80 )">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers chicken tikka masala">
-<img src="bakers chicken tikka masala.jpg" alt="Product 1">
-<h3>bakers chicken tikka masala</h3>
-<p>Price: ₹75</p>
-<button onclick="addToCart(1, 'bakers chicken tikka masala', 75 )">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers kabsa masala">
-<img src="bakers kabsa masala.jpg" alt="Product 2">
-<h3>bakers kabsa masala</h3>
-<p>Price: ₹85</p>
-<button onclick="addToCart(2, 'bakers kabsa masala', 85)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bakers noodles seasoning mix">
-<img src="bakers noodles seasoning mkix.jpg" alt="Product 3">
-<h3>bakers noodles seasoning mix</h3>
-<p>Price: ₹35</p>
-<button onclick="addToCart(3, 'bakers noodles seasoning mix', 35)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="blackgrapes">
-<img src="balckgrapes.webp" alt="Product 4">
-<h3>blackgrapes</h3>
-<p>Price: ₹85</p>
-<button onclick="addToCart(4, 'blackgrapes', 85)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="banana chips">
-<img src="banana chips.webp" alt="Product 5">
-<h3>banana chips</h3>
-<p>Price: ₹90</p>
-<button onclick="addToCart(5, 'banana chips', 90)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="barone">
-<img src="barone.jpg" alt="Product 7">
-<h3>barone</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(7, 'barone', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bingo  original potatoe chips chilli charged tomato">
-<img src="bingo  original potatoe chips chilli charged tomato.jpg" alt="Product 8">
-<h3>bingo  original potatoe chips chilli charged tomato</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(8, 'bingo  original potatoe chips chilli charged tomato', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bingo hashtags">
-<img src="bingo hashtags.jpg" alt="Product 9">
-<h3>bingo hashtags</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(9, 'bingo hashtags', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bingo onion">
-<img src="bingo onion.jpg" alt="Product 10">
-<h3>bingo onion</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(10, 'bingo onion', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bingo tomato">
-<img src="bingo tomato.jpg" alt="Product 11">
-<h3>bingo tomato</h3>
-<p>Price: ₹5</p>
-<button onclick="addToCart(11, 'bingo tomato', 5)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="boomer krunch">
-<img src="boomer krunch.jpg" alt="Product 12">
-<h3>boomer krunch</h3>
-<p>Price: ₹50</p>
-<button onclick="addToCart(12, 'boomer krunch', 50)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bread(300gm)">
-<img src="bread.jpg" alt="Product 12">
-<h3>bread(300gm)</h3>
-<p>Price: ₹40</p>
-<button onclick="addToCart(12, 'bread(300gm)', 40)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="bread(150gm)">
-<img src="bread.jpg" alt="Product 12">
-<h3>bread(150gm)</h3>
-<p>Price: ₹25</p>
-<button onclick="addToCart(12, 'bread(150gm)', 25)">Add to Cart</button>
-</div>
-
-
-<div class="product"data-name="butter">
-<img src="butter.jpg" alt="Product 14">
-<h3>butter</h3>
-<p>Price: ₹60</p>
-<button onclick="addToCart(14, 'butter', 60)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="cadbury nutties nutties favorites forever">
-<img src="cadbury nutties nutties favorites forever.jpg" alt="Product 15">
-<h3>cadbury nutties nutties favorites forever</h3>
-<p>Price: ₹100</p>
-<button onclick="addToCart(15, 'cadbury nutties nutties favorites forever', 100)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="cashews">
-<img src="cashews.avif" alt="Product 17">
-<h3>cashews</h3>
-<p>Price: ₹980</p>
-<button onclick="addToCart(17, 'cashews', 980)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="chandrika ayurvedic soap">
-<img src="chandrika ayurvedic soap.jpg" alt="Product 18">
-<h3>chandrika ayurvedic soap</h3>
-<p>Price: ₹35</p>
-<button onclick="addToCart(18, 'chandrika ayurvedic soap', 35)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="city's master chef broast masala">
-<img src="city's master chef broast masala.jpg" alt="Product 19">
-<h3>city's master chef broast masala</h3>
-<p>Price: ₹52</p>
-<button onclick="addToCart(19, 'citys master chef broast masala', 52)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="city's master chef kabsa masala">
-<img src="city's master chef kabsa masala.jpg" alt="Product 20">
-<h3>city's master chef kabsa masala</h3>
-<p>Price: ₹52</p>
-<button onclick="addToCart(20, 'citys master chef kabsa masala', 52)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="city's master chef kasoori methi">
-<img src="city's master chef kasoori methi.jpg" alt="Product 1">
-<h3>city's master chef kasoori methi</h3>
-<p>Price: ₹30</p>
-<button onclick="addToCart(1, 'citys master chef kasoori methi', 30)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="city's master chef manthi masala">
-<img src="city's master chef manthi masala.jpg" alt="Product 2">
-<h3>city's master chef manthi masala</h3>
-<p>Price: ₹52</p>
-<button onclick="addToCart(2,'citys master chef manthi masala', 52)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="comfort blue big">
-<img src="comfort blue big.jpg" alt="Product 3">
-<h3>comfort blue big</h3>
-<p>Price: ₹120</p>
-<button onclick="addToCart(3, 'comfort blue big', 120)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="comfort pink">
-<img src="comfort pink.jpg" alt="Product 6">
-<h3>comfort pink</h3>
-<p>Price: ₹55</p>
-<button onclick="addToCart(6, 'comfort pink', 55)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="condiments">
-<img src="condiments.jpg" alt="Product 7">
-<h3>condiments - please type in whatsapp which one you need!</h3>
-<p>Price: ₹as per your order</p>
-<button onclick="addToCart(7, 'condiments', as per your order)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="coriendar powder(100gm)">
-<img src="coriendar powder.jpg" alt="Product 8">
-<h3>coriendar powder(100gm)</h3>
-<p>Price: ₹21</p>
-<button onclick="addToCart(8, 'coriendar powder', 21)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="frozen corn(200gm)">
-<img src="corn.jpeg" alt="Product 17">
-<h3>frozen corn(200gm)</h3>
-<p>Price: ₹55</p>
-<button onclick="addToCart(17, 'corn', 55)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="crust and crumb corn flavour">
-<img src="crust and crumb corn flavour.jpg" alt="Product 18">
-<h3>crust and crumb corn flavour</h3>
-<p>Price: ₹28</p>
-<button onclick="addToCart(18, 'crust and crumb corn flavour', 28)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="janatha curd(450gm)">
-<img src="curd.jpg" alt="Product 20">
-<h3>janatha curd(450gm)</h3>
-<p>Price: ₹30</p>
-<button onclick="addToCart(20, 'curd', 30)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="milky mist curd(400gm)">
-<img src="curd.jpg" alt="Product 20">
-<h3>milky mist curd(400gm)</h3>
-<p>Price: ₹40</p>
-<button onclick="addToCart(20, 'curd', 40)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dailee lemon">
-<img src="dailee lemon.jpg" alt="Product 1">
-<h3>dailee lemon</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(1, 'dailee lemon', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dailee">
-<img src="dailee.jpg" alt="Product 2">
-<h3>dailee</h3>
-<p>Price: ₹10</p>
-<button onclick="addToCart(2,'dailee', 10)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairy milk silk oreo">
-<img src="dairy mi9lk silk oreo.jpg" alt="Product 3">
-<h3>dairy milk silk oreo</h3>
-<p>Price: ₹100</p>
-<button onclick="addToCart(3, 'dairy milk silk oreo', 100)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairy milk silk bubbly">
-<img src="dairy milk silk bubbly.jpg" alt="Product 4">
-<h3>dairy milk silk bubbly</h3>
-<p>Price: ₹210</p>
-<button onclick="addToCart(4, 'dairy milk silk bubbly', 210)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairy milk silk fruit&nut">
-<img src="dairy milk silk fruit&nut.jpg" alt="Product 5">
-<h3>dairy milk silk fruit&nut</h3>
-<p>Price: ₹100</p>
-<button onclick="addToCart(5, 'dairy milk silk fruit&nut', 100)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairy milk silk hazlenut">
-<img src="dairy milk silk hazlenut.jpg" alt="Product 6">
-<h3>dairy milk silk hazlenut</h3>
-<p>Price: ₹100</p>
-<button onclick="addToCart(6, 'dairy milk silk hazlenut', 100)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairy milk silk roast almond">
-<img src="dairy milk silk roast almond.jpg" alt="Product 7">
-<h3>dairy milk silk roast almond</h3>
-<p>Price: ₹100</p>
-<button onclick="addToCart(7, 'dairy milk silk roast almond', 100)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairymilk crispello">
-<img src="dairymilk crispello.jpg" alt="Product 8">
-<h3>dairymilk crispello</h3>
-<p>Price: ₹40</p>
-<button onclick="addToCart(8, 'dairymilk crispello', 40)">Add to Cart</button>
-</div>
-
-<div class="product"data-name="dairymilk ganache">
-    <img src="dairymilk ganache.jpg" alt="5 star">
-    <h3>dairymilk ganache</h3>
-    <p>Price: ₹100</p>
-    <button onclick="addToCart(1, 'dairymilk ganache', 100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="dairy milk silk mousse">
-    <img src="daiury milk silk mousse.jpg" alt="dairy milk silk mousse">
-    <h3>dairy milk silk mousse</h3>
-    <p>Price: ₹100</p>
-    <button onclick="addToCart(1, 'dairy milk silk mousse', 100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="dates d'Algeria">
-    <img src="dates dÁlgeria.jpg" alt="dates d'Algeria">
-    <h3>dates d'Algeria</h3>
-    <p>Price: ₹180</p>
-    <button onclick="addToCart(2, 'dates d\'Algeria', 180)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="dates ajwa">
-    <img src="dates.jpg" alt="dates ajwa">
-    <h3>dates ajwa</h3>
-    <p>Price: ₹1200</p>
-    <button onclick="addToCart(3, 'dates ajwa', 1200)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="dairy milk">
-    <img src="diary milk.webp" alt="dairy milk">
-    <h3>dairy milk</h3>
-    <p>Price: ₹30</p>
-    <button onclick="addToCart(4, 'dairy milk', 30)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="exo">
-    <img src="exo.jpg" alt="exo">
-    <h3>exo</h3>
-    <p>Price: ₹86</p>
-    <button onclick="addToCart(5, 'exo', 86)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="fantastic 4D">
-    <img src="fantastic 4d.jpg" alt="fantastic 4D">
-    <h3>fantastic 4D</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(6, 'fantastic 4D', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="galaxy">
-    <img src="galaxy 5.jpg" alt="galaxy">
-    <h3>galaxy</h3>
-    <p>Price: ₹10</p>
-    <button onclick="addToCart(7, 'galaxy', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="gems duo pack">
-    <img src="gems duo pack.jpg" alt="gems duo pack">
-    <h3>gems duo pack</h3>
-    <p>Price: ₹20</p>
-    <button onclick="addToCart(8, 'gems duo pack', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's grape squash">
-    <img src="grandma's grape squash.jpg" alt="grandma's grape squash">
-    <h3>grandma's grape squash</h3>
-    <p>Price: ₹100</p>
-    <button onclick="addToCart(9, 'grandmas grape squash', 100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's mango squash">
-    <img src="grandma's mango squash.jpg" alt="grandma's mango squash">
-    <h3>grandma's mango squash</h3>
+  <div class="product-list" id="product-list">
+    <div class="product" data-name="onion">
+      <img src="onion.webp" alt="Onion">
+      <h3>Onion</h3>
+      <p>Price: ₹40-70 per kg</p>
+      <button onclick="addToCart(1, 'Onion', 40)">Add to Cart</button>
+    </div>
+
+    <div class="product" data-name="tomato">
+        <img src="tomato.webp" alt="Tomato">
+        <h3>Tomato</h3>
+        <p>Price: ₹20-50 per kg</p>
+        <button onclick="addToCart(2, 'Tomato', 20)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="potato">
+        <img src="potato.webp" alt="Potato">
+        <h3>Potato</h3>
+        <p>Price: ₹20</p>
+        <button onclick="addToCart(3, 'Potato', 20)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="green-chilli">
+        <img src="greenchilli.webp" alt="Green Chilli">
+        <h3>Green Chilli</h3>
+        <p>Price: ₹72</p>
+        <button onclick="addToCart(4, 'Green Chilli', 72)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="carrot">
+        <img src="carrot.webp" alt="Carrot">
+        <h3>Carrot</h3>
+        <p>Price: ₹37</p>
+        <button onclick="addToCart(4, 'Carrot', 37)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="cabbage">
+        <img src="cabbage.webp" alt="Cabbage">
+        <h3>Cabbage</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(5, 'Cabbage', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="beans">
+        <img src="beens.webp" alt="Beans">
+        <h3>Beans</h3>
+        <p>Price: ₹45</p>
+        <button onclick="addToCart(6, 'Beans', 45)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="pomegranate">
+        <img src="pomegrenate.webp" alt="Pomegranate">
+        <h3>Pomegranate</h3>
+        <p>Price: ₹55</p>
+        <button onclick="addToCart(7, 'Pomegranate', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="big-banana">
+        <img src="bigbanana.webp" alt="Big Banana">
+        <h3>Big Banana</h3>
+        <p>Price: ₹5</p>
+        <button onclick="addToCart(1, 'Big Banana', 5)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="black-grapes">
+        <img src="blackgrapes.webp" alt="Black Grapes">
+        <h3>Black Grapes</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(2, 'Black Grapes', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="orange">
+        <img src="orange.webp" alt="Orange">
+        <h3>Orange</h3>
+        <p>Price: ₹20</p>
+        <button onclick="addToCart(3, 'Orange', 20)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="papaya">
+        <img src="papaya.webp" alt="Papaya">
+        <h3>Papaya</h3>
+        <p>Price: ₹72</p>
+        <button onclick="addToCart(4, 'Papaya', 72)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="green-grapes">
+        <img src="greengrapes.webp" alt="Green Grapes">
+        <h3>Green Grapes</h3>
+        <p>Price: ₹136</p>
+        <button onclick="addToCart(4, 'Green Grapes', 136)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="green-mango">
+        <img src="greenmango.webp" alt="Green Mango">
+        <h3>Green Mango</h3>
+        <p>Price: ₹37</p>
+        <button onclick="addToCart(4, 'Green Mango', 37)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="cucumber">
+        <img src="cucumber.webp" alt="Cucumber">
+        <h3>Cucumber</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(5, 'Cucumber', 10)">Add to Cart</button>
+    </div>
+    
+      
+      <div class="product" data-name="curry-leaves">
+        <img src="curryleaves.webp" alt="Curry Leaves">
+        <h3>Curry Leaves</h3>
+        <p>Price: ₹45</p>
+        <button onclick="addToCart(6, 'Curry Leaves', 45)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="kanthari">
+        <img src="kanthari.webp" alt="Kanthari">
+        <h3>Kanthari</h3>
+        <p>Price: ₹55</p>
+        <button onclick="addToCart(7, 'Kanthari', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="gooseberry">
+        <img src="gooseberry.webp" alt="Gooseberry">
+        <h3>Gooseberry</h3>
+        <p>Price: ₹37</p>
+        <button onclick="addToCart(4, 'Gooseberry', 37)">Add to Cart</button>
+    </div> 
+    
+    <div class="product" data-name="robusta">
+        <img src="robust.webp" alt="Robusta">
+        <h3>Robusta</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(5, 'Robusta', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="ginger">
+        <img src="ginger.webp" alt="Ginger">
+        <h3>Ginger</h3>
+        <p>Price: ₹45</p>
+        <button onclick="addToCart(6, 'Ginger', 45)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="garlic">
+        <img src="garlic.webp" alt="Garlic">
+        <h3>Garlic</h3>
+        <p>Price: ₹55</p>
+        <button onclick="addToCart(7, 'Garlic', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="5-star">
+        <img src="5 star.jpg" alt="5 Star Chocolate">
+        <h3>5 Star</h3>
+        <p>Price: ₹5</p>
+        <button onclick="addToCart(1, '5 Star', 5)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="7up-2.25l">
+        <img src="7up 2.25l.jpg" alt="7up 2.25L">
+        <h3>7up 2.25L</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(2, '7up 2.25L', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="7up">
+        <img src="7up.jpg" alt="7up">
+        <h3>7up</h3>
+        <p>Price: ₹20</p>
+        <button onclick="addToCart(3, '7up', 20)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="aashirvaad-atta">
+        <img src="atta.webp" alt="Aashirvaad Atta 1kg">
+        <h3>Aashirvaad Atta (1kg)</h3>
+        <p>Price: ₹72</p>
+        <button onclick="addToCart(4, 'Aashirvaad Atta', 72)">Add to Cart</button>
+    </div>
+    
+    
+      <div class="product" data-name="aashirvaad aatta (2kg)">
+        <img src="atta.webp" alt="Aashirvaad Atta 2kg">
+        <h3>Aashirvaad Atta (2kg)</h3>
+        <p>Price: ₹136</p>
+        <button onclick="addToCart(1, 'Aashirvaad Atta (2kg)', 136)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="aashirvaad aatta (3kg)">
+        <img src="atta.webp" alt="Aashirvaad Atta 3kg">
+        <h3>Aashirvaad Atta (3kg)</h3>
+        <p>Price: ₹37</p>
+        <button onclick="addToCart(2, 'Aashirvaad Atta (3kg)', 37)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="agnee">
+        <img src="agnee.jpg" alt="Agnee">
+        <h3>Agnee</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(3, 'Agnee', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="aldan kubboos">
+        <img src="aldan kubboos.jpg" alt="Aldan Kubboos">
+        <h3>Aldan Kubboos</h3>
+        <p>Price: ₹45</p>
+        <button onclick="addToCart(4, 'Aldan Kubboos', 45)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="amul dark chocolate">
+        <img src="amul dark chocolate.jpg" alt="Amul Dark Chocolate">
+        <h3>Amul Dark Chocolate</h3>
+        <p>Price: ₹55</p>
+        <button onclick="addToCart(5, 'Amul Dark Chocolate', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="amul milk chocolate">
+        <img src="amul milk chocolate.jpg" alt="Amul Milk Chocolate">
+        <h3>Amul Milk Chocolate</h3>
+        <p>Price: ₹55</p>
+        <button onclick="addToCart(6, 'Amul Milk Chocolate', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="amul mithai mate">
+        <img src="amul mithai mate.jpg" alt="Amul Mithai Mate">
+        <h3>Amul Mithai Mate</h3>
+        <p>Price: ₹126</p>
+        <button onclick="addToCart(7, 'Amul Mithai Mate', 126)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="apples (1kg)">
+        <img src="apples.jpg" alt="Apples 1kg">
+        <h3>Apples (1kg)</h3>
+        <p>Price: ₹200</p>
+        <button onclick="addToCart(8, 'Apples (1kg)', 200)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="appy kiwi fruit crush">
+        <img src="appy kiwi fruit crush.jpg" alt="Appy Kiwi Fruit Crush">
+        <h3>Appy Kiwi Fruit Crush</h3>
+        <p>Price: ₹190</p>
+        <button onclick="addToCart(9, 'Appy Kiwi Fruit Crush', 190)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="avocado">
+        <img src="avocado.avif" alt="Avocado 1kg">
+        <h3>Avocado (1kg)</h3>
+        <p>Price: ₹450</p>
+        <button onclick="addToCart(10, 'Avocado (1kg)', 450)">Add to Cart</button>
+    </div>
+    
+    
+    <div class="product"data-name="bakers alfaham masala">
+    <img src="bakers alfaham masalal.jpg" alt="Product 7">
+    <h3>bakers alfaham masala</h3>
     <p>Price: ₹90</p>
-    <button onclick="addToCart(10, 'grandmas mango squash', 90)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's orange squash">
-    <img src="grandma's orange squash.jpg" alt="grandma's orange squash">
-    <h3>grandma's orange squash</h3>
-    <p>Price: ₹130</p>
-    <button onclick="addToCart(11, 'grandmas orange squash', 130)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's pineapple squash">
-    <img src="grandma's pineapple squash.jpg" alt="grandma's pineapple squash">
-    <h3>grandma's pineapple squash</h3>
+    <button onclick="addToCart(7, 'bakers alfaham masala', 90)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers bread crumbs">
+    <img src="bakers bread crumbs.jpg" alt="Product 8">
+    <h3>bakers bread crumbs</h3>
+    <p>Price: ₹30</p>
+    <button onclick="addToCart(8, 'bakers bread crumbs', 30)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers butter chicken masala">
+    <img src="bakers butter chicken masala.jpg" alt="Product 9">
+    <h3>bakers butter chicken masala</h3>
+    <p>Price: ₹50</p>
+    <button onclick="addToCart(9, 'bakers butter chicken masala', 50)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers chat masala">
+    <img src="bakers chat masala.jpg" alt="Product 10">
+    <h3>bakers chat masala</h3>
+    <p>Price: ₹80</p>
+    <button onclick="addToCart(10, 'bakers chat masala', 80 )">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers chicken tikka masala">
+    <img src="bakers chicken tikka masala.jpg" alt="Product 1">
+    <h3>bakers chicken tikka masala</h3>
+    <p>Price: ₹75</p>
+    <button onclick="addToCart(1, 'bakers chicken tikka masala', 75 )">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers kabsa masala">
+    <img src="bakers kabsa masala.jpg" alt="Product 2">
+    <h3>bakers kabsa masala</h3>
+    <p>Price: ₹85</p>
+    <button onclick="addToCart(2, 'bakers kabsa masala', 85)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bakers noodles seasoning mix">
+    <img src="bakers noodles seasoning mkix.jpg" alt="Product 3">
+    <h3>bakers noodles seasoning mix</h3>
+    <p>Price: ₹35</p>
+    <button onclick="addToCart(3, 'bakers noodles seasoning mix', 35)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="blackgrapes">
+    <img src="balckgrapes.webp" alt="Product 4">
+    <h3>blackgrapes</h3>
+    <p>Price: ₹85</p>
+    <button onclick="addToCart(4, 'blackgrapes', 85)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="banana chips">
+    <img src="banana chips.webp" alt="Product 5">
+    <h3>banana chips</h3>
+    <p>Price: ₹90</p>
+    <button onclick="addToCart(5, 'banana chips', 90)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="barone">
+    <img src="barone.jpg" alt="Product 7">
+    <h3>barone</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(7, 'barone', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bingo  original potatoe chips chilli charged tomato">
+    <img src="bingo  original potatoe chips chilli charged tomato.jpg" alt="Product 8">
+    <h3>bingo  original potatoe chips chilli charged tomato</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(8, 'bingo  original potatoe chips chilli charged tomato', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bingo hashtags">
+    <img src="bingo hashtags.jpg" alt="Product 9">
+    <h3>bingo hashtags</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(9, 'bingo hashtags', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bingo onion">
+    <img src="bingo onion.jpg" alt="Product 10">
+    <h3>bingo onion</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(10, 'bingo onion', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bingo tomato">
+    <img src="bingo tomato.jpg" alt="Product 11">
+    <h3>bingo tomato</h3>
+    <p>Price: ₹5</p>
+    <button onclick="addToCart(11, 'bingo tomato', 5)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="boomer krunch">
+    <img src="boomer krunch.jpg" alt="Product 12">
+    <h3>boomer krunch</h3>
+    <p>Price: ₹50</p>
+    <button onclick="addToCart(12, 'boomer krunch', 50)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bread(300gm)">
+    <img src="bread.jpg" alt="Product 12">
+    <h3>bread(300gm)</h3>
+    <p>Price: ₹40</p>
+    <button onclick="addToCart(12, 'bread(300gm)', 40)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="bread(150gm)">
+    <img src="bread.jpg" alt="Product 12">
+    <h3>bread(150gm)</h3>
+    <p>Price: ₹25</p>
+    <button onclick="addToCart(12, 'bread(150gm)', 25)">Add to Cart</button>
+    </div>
+    
+    
+    <div class="product"data-name="butter">
+    <img src="butter.jpg" alt="Product 14">
+    <h3>butter</h3>
+    <p>Price: ₹60</p>
+    <button onclick="addToCart(14, 'butter', 60)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="cadbury nutties nutties favorites forever">
+    <img src="cadbury nutties nutties favorites forever.jpg" alt="Product 15">
+    <h3>cadbury nutties nutties favorites forever</h3>
     <p>Price: ₹100</p>
-    <button onclick="addToCart(12, 'grandmas pineapple squash', 100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's rice palada payasam mix">
-    <img src="grandma's rice palada payasam mix.jpg" alt="grandma's rice palada payasam mix">
-    <h3>grandma's rice palada payasam mix</h3>
-    <p>Price: ₹82</p>
-    <button onclick="addToCart(13, 'grandmas rice palada payasam mix', 82)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="grandma's semiya payasam mix">
-    <img src="grandma's semiya payasam mix.jpg" alt="grandma's semiya payasam mix">
-    <h3>grandma's semiya payasam mix</h3>
-    <p>Price: ₹82</p>
-    <button onclick="addToCart(14, 'grandmas semiya payasam mix', 82)">Add to Cart</button>
-  </div>
-  
-<div class="product" data-name="green apple fruit crush">
-  <img src="green apple fruit crush.jpg" alt="Product 10">
-  <h3>green apple fruit crush</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(10, 'green apple fruit crush', 170)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="hamam">
-  <img src="hamam.jpg" alt="Product 2">
-  <h3>hamam</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(2, 'hamam', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="happy badam fruit crush">
-  <img src="happy badam fruit crush.jpg" alt="Product 3">
-  <h3>happy badam fruit crush</h3>
-  <p>Price: ₹250</p>
-  <button onclick="addToCart(3, 'happy badam fruit crush', 250)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="happy butterscotch fruit crush">
-  <img src="happy butterscotch fruit crush.jpg" alt="Product 4">
-  <h3>happy butterscotch fruit crush</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(4, 'happy butterscotch fruit crush', 170)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="happy grapefruit squash">
-  <img src="happy grapefruit squash.jpg" alt="Product 5">
-  <h3>happy grapefruit squash</h3>
-  <p>Price: ₹130</p>
-  <button onclick="addToCart(5, 'happy grapefruit squash', 130)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="happy litchi fruit crush">
-  <img src="happy litchi fruit crush.jpg" alt="Product 6">
-  <h3>happy litchi fruit crush</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(6, 'happy litchi fruit crush', 170)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="happy orange fruit crush">
-  <img src="happy orange fruitcrush.jpg" alt="Product 7">
-  <h3>happy orange fruit crush</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(7, 'happy orange fruit crush', 170)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="hersheys milk shake almond flavour">
-  <img src="hersheys milk shake almond flavour .jpg" alt="Product 8">
-  <h3>hersheys milk shake almond flavour</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(8, 'hersheys milk shake almond flavour', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="hersheys milk shake chocolate flavour">
-  <img src="hersheys milk shake chocolate flavour.jpg" alt="Product 9">
-  <h3>hersheys milk shake chocolate flavour</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(9, 'hersheys milk shake chocolate flavour', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="hersheys milk shake cookies">
-  <img src="hersheys milk shake cokies.jpg" alt="Product 10">
-  <h3>hersheys milk shake cookies</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(10, 'hersheys milk shake cookies', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="hersheys milk shake coffee flavour">
-  <img src="hersheys milk shake vcoffee flavour.jpg" alt="Product 11">
-  <h3>hersheys milk shake coffee flavour</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(11, 'hersheys milk shake coffee flavour', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ice cream">
-  <img src="ice cream.webp" alt="Product 12">
-  <h3>ice cream - please provide which ice creams you need!</h3>
-  <p>Price: ₹as per your order</p>
-  <button onclick="addToCart(12, 'ice cream - ___________________', 0)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="milky bar large">
-  <img src="ilky bar large.jpg" alt="Product 13">
-  <h3>milky bar large</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(13, 'milky bar large', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="milky bar mini">
-  <img src="ilkybar mkini.jpg" alt="Product 14">
-  <h3>milky bar mini</h3>
-  <p>Price: ₹5</p>
-  <button onclick="addToCart(14, 'milky bar mini', 5)">Add to Cart</button>
-  </div>
-  
-
-<div class="product" data-name="kitkat">
-  <img src="itkat darkchocolate coated vafour.jpg" alt="Product 15">
-  <h3>kitkat darkchocolate coated wafer</h3>
-  <p>Price: ₹190</p>
-  <button onclick="addToCart(15, 'kitkat darkchocolate coated wafer', 190)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="kadala">
-  <img src="kadala.jpg" alt="Product 16">
-  <h3>kadala</h3>
-  <p>Price: ₹12</p>
-  <button onclick="addToCart(16, 'kadala', 12)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="kadalappala">
-  <img src="kadalappala.jpg" alt="Product 17">
-  <h3>kadalappala</h3>
-  <p>Price: ₹12</p>
-  <button onclick="addToCart(17, 'kadalappala', 12)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="kavitha sweets">
-  <img src="kavitha sweats.jpg" alt="Product 18">
-  <h3>kavitha sweets</h3>
-  <p>Price: ₹12</p>
-  <button onclick="addToCart(18, 'kavitha sweets', 12)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="kavitha sweets">
-  <img src="kavitha sweets.jpg" alt="Product 19">
-  <h3>kavitha sweets</h3>
-  <p>Price: ₹12</p>
-  <button onclick="addToCart(19, 'kavitha sweets', 12)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="kitkat">
-  <img src="kitkat medium.jpg" alt="Product 20">
-  <h3>kitkat medium</h3>
-  <p>Price: ₹27</p>
-  <button onclick="addToCart(20, 'kitkat medium', 27)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lays">
-  <img src="Lays.webp" alt="Product 1">
-  <h3>Lays - please provide which flavour in WhatsApp!</h3>
-  <button onclick="addToCart(1, 'Lays- ___________________', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="leafton tea">
-  <img src="leafton tea powder.jpg" alt="Product 2">
-  <h3>leafton tea powder</h3>
-  <p>Price: ₹100</p>
-  <button onclick="addToCart(2,'leafton tea powder',100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lemon wowzers">
-  <img src="lemon wowzers.jpg" alt="Product 3">
-  <h3>lemon wowzers</h3>
-  <p>Price: ₹5</p>
-  <button onclick="addToCart(3, 'lemon wowzers', 5)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lemon">
-  <img src="lemon.jpg" alt="Product 4">
-  <h3>lemon (100gm)</h3>
-  <p>Price: ₹80</p>
-  <button onclick="addToCart(4, 'lemon', 80)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lifebuoy">
-  <img src="lifebuoy neem and aloe.jpg" alt="Product 5">
-  <h3>lifebuoy neem and aloe</h3>
-  <p>Price: ₹395</p>
-  <button onclick="addToCart(5, 'lifebuoy neem and aloe', 395)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lifebuoy">
-  <img src="lifebuoy turmeric and honey.jpg" alt="Product 6">
-  <h3>lifebuoy turmeric and honey</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(6, 'lifebuoy turmeric and honey', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lux">
-  <img src="lux jasmine (small).jpg" alt="Product 7">
-  <h3>lux jasmine (small)</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(7, 'lux jasmine (small)', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lux">
-  <img src="lux lotus.jpg" alt="Product 8">
-  <h3>lux lotus</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(8, 'lux lotus', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lux">
-  <img src="lux lotus(small).jpg" alt="Product 17">
-  <h3>lux lotus(small)</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(17, 'lux lotus(small)', 40)">Add to Cart</button>
-  </div>
-  
-
-<div class="product" data-name="lux rose (small)">
-  <img src="lux rose (small).jpg" alt="Product 18">
-  <h3>lux rose (small)</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(18, 'lux rose (small)', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lux rose">
-  <img src="lux rose.jpg" alt="Product 19">
-  <h3>lux rose</h3>
-  <p>Price: ₹39</p>
-  <button onclick="addToCart(19, 'lux rose', 39)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="lux sandalwood">
-  <img src="lux sandalwood.jpg" alt="Product 20">
-  <h3>lux sandalwood</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(20, 'lux sandalwood', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="maa mango flavoured">
-  <img src="maa mango flaoured.jpg" alt="Product 1">
-  <h3>maa mango flavoured</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(1, 'maa mango flavoured', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="maggi creamy coconut milk powder">
-  <img src="maggi creamy coconut milkj powder.jpg" alt="Product 2">
-  <h3>maggi creamy coconut milk powder</h3>
-  <p>Price: ₹125</p>
-  <button onclick="addToCart(2, 'maggi creamy coconut milk powder', 125)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="margo soap">
-  <img src="margo.jpg" alt="Product 3">
-  <h3>margo soap</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(3, 'margo soap', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="medimix">
-  <img src="medimix.jpg" alt="Product 4">
-  <h3>medimix</h3>
-  <p>Price: ₹34</p>
-  <button onclick="addToCart(4, 'medimix', 34)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="meriba soda">
-  <img src="meriba soda.jpg" alt="Product 5">
-  <h3>meriba soda</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(5, 'meriba soda', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="milky bar">
-  <img src="milky bar.jpg" alt="Product 6">
-  <h3>milky bar</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(6, 'milky bar',10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="milma milk">
-  <img src="milma.jpg" alt="Product 7">
-  <h3>milma milk</h3>
-  <p>Price: ₹28</p>
-  <button onclick="addToCart(7, 'milma milk', 28)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="mirinda large">
-  <img src="mirinda large.jpg" alt="Product 8">
-  <h3>mirinda large</h3>
-  <p>Price: ₹100</p>
-  <button onclick="addToCart(8, 'mirinda large', 100)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="mirinda medium">
-  <img src="mirinda medium.jpg" alt="5 star">
-  <h3>mirinda medium</h3>
-  <p>Price: ₹40</p>
-  <button onclick="addToCart(1, 'mirinda medium', 40)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="mirinda">
-  <img src="mirinda.jpg" alt="7up 2.25l">
-  <h3>mirinda</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(2, 'mirinda', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="more light liquid detergent 5l">
-  <img src="more light liquid detergent 5l.jpg" alt="7up">
-  <h3>more light liquid detergent 5l</h3>
-  <p>Price: ₹349</p>
-  <button onclick="addToCart(3, 'more light liquid detergent 5l', 349)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="moreinz passionfruit squash">
-  <img src="moreinz passionfruit squash.jpg" alt="aashirvaad aatta">
-  <h3>moreinz passionfruit squash</h3>
-  <p>Price: ₹129</p>
-  <button onclick="addToCart(4, 'moreinz passionfruit squash', 129)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="morelight liquid detergent">
-  <img src="morelight liquid detergent.jpg" alt="agnee">
-  <h3>morelight liquid detergent</h3>
-  <p>Price: ₹99</p>
-  <button onclick="addToCart(5, 'morelight liquid detergent', 99)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="morelight soap">
-  <img src="morelight soap.jpg" alt="aldan kubboos">
-  <h3>morelight soap</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(6, 'morelight soap', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="mountain dew">
-  <img src="mountain dew.jpg" alt="amul dark chocolate">
-  <h3>mountain dew</h3>
-  <p>Price: ₹20 </p>
-  <button onclick="addToCart(7, 'mountain dew', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="mr kitchen dishwash">
-  <img src="mr kitchen dishwash.jpg" alt="Product 2">
-  <h3>mr kitchen dishwash</h3>
-  <p>Price: ₹30</p>
-  <button onclick="addToCart(8,'mr kitchen dishwash', 30 )">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="nabti richeese">
-  <img src="nabti richeese.jpg" alt="Product 3">
-  <h3>nabti richeese</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(3, 'nabti richeese', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="munch max">
-  <img src="munch max.jpg" alt="Product 4">
-  <h3>munch max</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(3, 'munch max', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="nabati pink lawa">
-  <img src="nabati pink lawa.jpg" alt="Product 5">
-  <h3>nabati pink lawa</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(5, 'nabati pink lawa', 10)">Add to Cart</button>
-  </div>
-  
-
-<div class="product" data-name="nabati richoco">
-  <img src="nabti richoco .jpg" alt="Product 6">
-  <h3>nabati richoco</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(6, 'nabati richoco', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="nabati cocojawa">
-  <img src="nabvati cocojawa.jpg" alt="Product 7">
-  <h3>nabati cocojawa</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(7, 'nabati cocojawa', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="nestle classic">
-  <img src="nestle cl;asdsic.jpg" alt="Product 8">
-  <h3>nestle classic</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(8, 'nestle classic', 10)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="nestle milkmaid">
-  <img src="nestle milkmaid.jpg" alt="Product 9">
-  <h3>nestle milkmaid</h3>
-  <p>Price: ₹147</p>
-  <button onclick="addToCart(9, 'nestle milkmaid', 147)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="noodles">
-  <img src="noodles.jpg" alt="Product 10">
-  <h3>noodles</h3>
-  <p>Price: ₹15</p>
-  <button onclick="addToCart(10, 'noodles', 15)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="orbit">
-  <img src="orbit 5.jpg" alt="Product 4">
-  <h3>orbit</h3>
-  <p>Price: ₹5</p>
-  <button onclick="addToCart(4, 'orbit', 5)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="orbit">
-  <img src="orbit.jpg" alt="Product 5">
-  <h3>orbit</h3>
-  <p>Price: ₹50</p>
-  <button onclick="addToCart(5, 'orbit', 50)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="macroni">
-  <img src="pasta.jpg" alt="Product 6">
-  <h3>macroni</h3>
-  <p>Price: ₹112</p>
-  <button onclick="addToCart(6, 'macroni', 112)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="pepsi large">
-  <img src="pepsi large.jpg" alt="Product 9">
-  <h3>pepsi large</h3>
-  <p>Price: ₹100</p>
-  <button onclick="addToCart(9, 'pepsi large', 100)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="pepsi">
-  <img src="pepsi.jpg" alt="Product 10">
-  <h3>pepsi</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(10, 'pepsi', 20)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="perk">
-  <img src="perk.jpg" alt="Product 11">
-  <h3>perk</h3>
-  <p>Price: ₹5</p>
-  <button onclick="addToCart(11, 'perk', 5)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="pfp mellow cake">
-  <img src="pfp mellow cake.jpg" alt="Product 12">
-  <h3>pfp mellow cake</h3>
-  <p>Price: ₹50</p>
-  <button onclick="addToCart(12, 'pfp mellow cake', 50)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="poppins">
-  <img src="poppins.jpg" alt="Product 14">
-  <h3>poppins</h3>
-  <p>Price: ₹2</p>
-  <button onclick="addToCart(14, 'poppins', 5)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="potatoes">
-  <img src="potatoes.jpg" alt="Product 15">
-  <h3>potatoes</h3>
-  <p>Price: ₹50</p>
-  <button onclick="addToCart(15, 'potatoes', 50)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="pril lime">
-  <img src="pril lime.jpg" alt="Product 16">
-  <h3>pril lime(large)</h3>
-  <p>Price: ₹44</p>
-  <button onclick="addToCart(16, 'pril lime', 44)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="red label">
-  <img src="red label.jpg" alt="Product 19">
-  <h3>red label</h3>
-  <p>Price: ₹155</p>
-  <button onclick="addToCart(19, 'red label', 155)">Add to Cart</button>
-  </div>
+    <button onclick="addToCart(15, 'cadbury nutties nutties favorites forever', 100)">Add to Cart</button>
+    </div>
     
-  <div class="product" data-name="shipton tea coco">
-  <img src="shipton tea coco.jpg" alt="Product 2">
-  <h3>shipton tea coco</h3>
-  <p>Price: ₹199</p>
-  <button onclick="addToCart(2,'shipton tea coco', 199)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="shipton tea powder 250 gm">
-  <img src="shipton tea powder 250 mgm.jpg" alt="Product 3">
-  <h3>shipton tea powder 250 gm</h3>
-  <p>Price: ₹95</p>
-  <button onclick="addToCart(3, 'shipton tea powder 250 gm', 95)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="shipton tea">
-  <img src="shipton tea.jpg" alt="Product 4">
-  <h3>shipton tea</h3>
-  <p>Price: ₹190</p>
-  <button onclick="addToCart(4, 'shipton tea', 190)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="shots">
-  <img src="shots.jpg" alt="Product 5">
-  <h3>shots</h3>
-  <p>Price: ₹2</p>
-  <button onclick="addToCart(5, 'shots', 2)">Add to Cart</button>
-  </div>
-  
-<div class="product" data-name="comfort pink">
-  <img src="comfort pink.jpg" alt="Product 6">
-  <h3>comfort pink</h3>
-  <p>Price: ₹58</p>
-  <button onclick="addToCart(6, 'comfort pink', 58)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="skittles pink">
-  <img src="skittles pink.jpg" alt="Product 7">
-  <h3>skittles pink</h3>
-  <p>Price: ₹50</p>
-  <button onclick="addToCart(7, 'skittles pink', 50)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="skittles red">
-  <img src="skittles red.jpg" alt="Product 8">
-  <h3>skittles red</h3>
-  <p>Price: ₹50</p>
-  <button onclick="addToCart(8, 'skittles red', 50)">Add to Cart</button>
-  </div>
+    <div class="product"data-name="cashews">
+    <img src="cashews.avif" alt="Product 17">
+    <h3>cashews</h3>
+    <p>Price: ₹980</p>
+    <button onclick="addToCart(17, 'cashews', 980)">Add to Cart</button>
+    </div>
     
-  <div class="product" data-name="snickers">
-  <img src="snickers.jpg" alt="Product 19">
-  <h3>snickers</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(19, 'snickers', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="soft drinks - please tell which soft drink in whatsapp!">
-  <img src="soft drinks.webp" alt="Product 20">
-  <h3>soft drinks - please tell which soft drink in whatsapp!</h3>
-  <p>Price: ₹as per your order</p>
-  <button onclick="addToCart(20, 'soft drink-___________________', as per your order)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="sting energy">
-  <img src="sting energy.jpg" alt="Product 2">
-  <h3>sting energy</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(2,'sting energy', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="sunlight matic liquid">
-  <img src="sunlight matic liquid.jpg" alt="Product 3">
-  <h3>sunlight matic liquid</h3>
-  <p>Price: ₹89</p>
-  <button onclick="addToCart(3, 'sunlight matic liquid', 89)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="supercheck mini">
-  <img src="supercheck mini.jpg" alt="Product 4">
-  <h3>supercheck mini</h3>
-  <p>Price: ₹5</p>
-  <button onclick="addToCart(4, 'supercheck mini', 5)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="supercheck">
-  <img src="supercheck.jpg" alt="Product 5">
-  <h3>supercheck</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(5, 'supercheck', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="swing guava">
-  <img src="swing guava .jpg" alt="Product 6">
-  <h3>swing guava</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(6, 'swing guava', 10)">Add to Cart</button>
-  </div>
-  
+    <div class="product"data-name="chandrika ayurvedic soap">
+    <img src="chandrika ayurvedic soap.jpg" alt="Product 18">
+    <h3>chandrika ayurvedic soap</h3>
+    <p>Price: ₹35</p>
+    <button onclick="addToCart(18, 'chandrika ayurvedic soap', 35)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="city's master chef broast masala">
+    <img src="city's master chef broast masala.jpg" alt="Product 19">
+    <h3>city's master chef broast masala</h3>
+    <p>Price: ₹52</p>
+    <button onclick="addToCart(19, 'citys master chef broast masala', 52)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="city's master chef kabsa masala">
+    <img src="city's master chef kabsa masala.jpg" alt="Product 20">
+    <h3>city's master chef kabsa masala</h3>
+    <p>Price: ₹52</p>
+    <button onclick="addToCart(20, 'citys master chef kabsa masala', 52)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="city's master chef kasoori methi">
+    <img src="city's master chef kasoori methi.jpg" alt="Product 1">
+    <h3>city's master chef kasoori methi</h3>
+    <p>Price: ₹30</p>
+    <button onclick="addToCart(1, 'citys master chef kasoori methi', 30)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="city's master chef manthi masala">
+    <img src="city's master chef manthi masala.jpg" alt="Product 2">
+    <h3>city's master chef manthi masala</h3>
+    <p>Price: ₹52</p>
+    <button onclick="addToCart(2,'citys master chef manthi masala', 52)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="comfort blue big">
+    <img src="comfort blue big.jpg" alt="Product 3">
+    <h3>comfort blue big</h3>
+    <p>Price: ₹120</p>
+    <button onclick="addToCart(3, 'comfort blue big', 120)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="comfort pink">
+    <img src="comfort pink.jpg" alt="Product 6">
+    <h3>comfort pink</h3>
+    <p>Price: ₹55</p>
+    <button onclick="addToCart(6, 'comfort pink', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="condiments">
+    <img src="condiments.jpg" alt="Product 7">
+    <h3>condiments - please type in whatsapp which one you need!</h3>
+    <p>Price: ₹as per your order</p>
+    <button onclick="addToCart(7, 'condiments', as per your order)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="coriendar powder(100gm)">
+    <img src="coriendar powder.jpg" alt="Product 8">
+    <h3>coriendar powder(100gm)</h3>
+    <p>Price: ₹21</p>
+    <button onclick="addToCart(8, 'coriendar powder', 21)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="frozen corn(200gm)">
+    <img src="corn.jpeg" alt="Product 17">
+    <h3>frozen corn(200gm)</h3>
+    <p>Price: ₹55</p>
+    <button onclick="addToCart(17, 'corn', 55)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="crust and crumb corn flavour">
+    <img src="crust and crumb corn flavour.jpg" alt="Product 18">
+    <h3>crust and crumb corn flavour</h3>
+    <p>Price: ₹28</p>
+    <button onclick="addToCart(18, 'crust and crumb corn flavour', 28)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="janatha curd(450gm)">
+    <img src="curd.jpg" alt="Product 20">
+    <h3>janatha curd(450gm)</h3>
+    <p>Price: ₹30</p>
+    <button onclick="addToCart(20, 'curd', 30)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="milky mist curd(400gm)">
+    <img src="curd.jpg" alt="Product 20">
+    <h3>milky mist curd(400gm)</h3>
+    <p>Price: ₹40</p>
+    <button onclick="addToCart(20, 'curd', 40)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dailee lemon">
+    <img src="dailee lemon.jpg" alt="Product 1">
+    <h3>dailee lemon</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(1, 'dailee lemon', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dailee">
+    <img src="dailee.jpg" alt="Product 2">
+    <h3>dailee</h3>
+    <p>Price: ₹10</p>
+    <button onclick="addToCart(2,'dailee', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairy milk silk oreo">
+    <img src="dairy mi9lk silk oreo.jpg" alt="Product 3">
+    <h3>dairy milk silk oreo</h3>
+    <p>Price: ₹100</p>
+    <button onclick="addToCart(3, 'dairy milk silk oreo', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairy milk silk bubbly">
+    <img src="dairy milk silk bubbly.jpg" alt="Product 4">
+    <h3>dairy milk silk bubbly</h3>
+    <p>Price: ₹210</p>
+    <button onclick="addToCart(4, 'dairy milk silk bubbly', 210)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairy milk silk fruit&nut">
+    <img src="dairy milk silk fruit&nut.jpg" alt="Product 5">
+    <h3>dairy milk silk fruit&nut</h3>
+    <p>Price: ₹100</p>
+    <button onclick="addToCart(5, 'dairy milk silk fruit&nut', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairy milk silk hazlenut">
+    <img src="dairy milk silk hazlenut.jpg" alt="Product 6">
+    <h3>dairy milk silk hazlenut</h3>
+    <p>Price: ₹100</p>
+    <button onclick="addToCart(6, 'dairy milk silk hazlenut', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairy milk silk roast almond">
+    <img src="dairy milk silk roast almond.jpg" alt="Product 7">
+    <h3>dairy milk silk roast almond</h3>
+    <p>Price: ₹100</p>
+    <button onclick="addToCart(7, 'dairy milk silk roast almond', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairymilk crispello">
+    <img src="dairymilk crispello.jpg" alt="Product 8">
+    <h3>dairymilk crispello</h3>
+    <p>Price: ₹40</p>
+    <button onclick="addToCart(8, 'dairymilk crispello', 40)">Add to Cart</button>
+    </div>
+    
+    <div class="product"data-name="dairymilk ganache">
+        <img src="dairymilk ganache.jpg" alt="5 star">
+        <h3>dairymilk ganache</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(1, 'dairymilk ganache', 100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="dairy milk silk mousse">
+        <img src="daiury milk silk mousse.jpg" alt="dairy milk silk mousse">
+        <h3>dairy milk silk mousse</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(1, 'dairy milk silk mousse', 100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="dates d'Algeria">
+        <img src="dates dÁlgeria.jpg" alt="dates d'Algeria">
+        <h3>dates d'Algeria</h3>
+        <p>Price: ₹180</p>
+        <button onclick="addToCart(2, 'dates d\'Algeria', 180)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="dates ajwa">
+        <img src="dates.jpg" alt="dates ajwa">
+        <h3>dates ajwa</h3>
+        <p>Price: ₹1200</p>
+        <button onclick="addToCart(3, 'dates ajwa', 1200)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="dairy milk">
+        <img src="diary milk.webp" alt="dairy milk">
+        <h3>dairy milk</h3>
+        <p>Price: ₹30</p>
+        <button onclick="addToCart(4, 'dairy milk', 30)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="exo">
+        <img src="exo.jpg" alt="exo">
+        <h3>exo</h3>
+        <p>Price: ₹86</p>
+        <button onclick="addToCart(5, 'exo', 86)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="fantastic 4D">
+        <img src="fantastic 4d.jpg" alt="fantastic 4D">
+        <h3>fantastic 4D</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(6, 'fantastic 4D', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="galaxy">
+        <img src="galaxy 5.jpg" alt="galaxy">
+        <h3>galaxy</h3>
+        <p>Price: ₹10</p>
+        <button onclick="addToCart(7, 'galaxy', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="gems duo pack">
+        <img src="gems duo pack.jpg" alt="gems duo pack">
+        <h3>gems duo pack</h3>
+        <p>Price: ₹20</p>
+        <button onclick="addToCart(8, 'gems duo pack', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's grape squash">
+        <img src="grandma's grape squash.jpg" alt="grandma's grape squash">
+        <h3>grandma's grape squash</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(9, 'grandmas grape squash', 100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's mango squash">
+        <img src="grandma's mango squash.jpg" alt="grandma's mango squash">
+        <h3>grandma's mango squash</h3>
+        <p>Price: ₹90</p>
+        <button onclick="addToCart(10, 'grandmas mango squash', 90)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's orange squash">
+        <img src="grandma's orange squash.jpg" alt="grandma's orange squash">
+        <h3>grandma's orange squash</h3>
+        <p>Price: ₹130</p>
+        <button onclick="addToCart(11, 'grandmas orange squash', 130)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's pineapple squash">
+        <img src="grandma's pineapple squash.jpg" alt="grandma's pineapple squash">
+        <h3>grandma's pineapple squash</h3>
+        <p>Price: ₹100</p>
+        <button onclick="addToCart(12, 'grandmas pineapple squash', 100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's rice palada payasam mix">
+        <img src="grandma's rice palada payasam mix.jpg" alt="grandma's rice palada payasam mix">
+        <h3>grandma's rice palada payasam mix</h3>
+        <p>Price: ₹82</p>
+        <button onclick="addToCart(13, 'grandmas rice palada payasam mix', 82)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="grandma's semiya payasam mix">
+        <img src="grandma's semiya payasam mix.jpg" alt="grandma's semiya payasam mix">
+        <h3>grandma's semiya payasam mix</h3>
+        <p>Price: ₹82</p>
+        <button onclick="addToCart(14, 'grandmas semiya payasam mix', 82)">Add to Cart</button>
+      </div>
+      
+    <div class="product" data-name="green apple fruit crush">
+      <img src="green apple fruit crush.jpg" alt="Product 10">
+      <h3>green apple fruit crush</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(10, 'green apple fruit crush', 170)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="hamam">
+      <img src="hamam.jpg" alt="Product 2">
+      <h3>hamam</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(2, 'hamam', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="happy badam fruit crush">
+      <img src="happy badam fruit crush.jpg" alt="Product 3">
+      <h3>happy badam fruit crush</h3>
+      <p>Price: ₹250</p>
+      <button onclick="addToCart(3, 'happy badam fruit crush', 250)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="happy butterscotch fruit crush">
+      <img src="happy butterscotch fruit crush.jpg" alt="Product 4">
+      <h3>happy butterscotch fruit crush</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(4, 'happy butterscotch fruit crush', 170)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="happy grapefruit squash">
+      <img src="happy grapefruit squash.jpg" alt="Product 5">
+      <h3>happy grapefruit squash</h3>
+      <p>Price: ₹130</p>
+      <button onclick="addToCart(5, 'happy grapefruit squash', 130)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="happy litchi fruit crush">
+      <img src="happy litchi fruit crush.jpg" alt="Product 6">
+      <h3>happy litchi fruit crush</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(6, 'happy litchi fruit crush', 170)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="happy orange fruit crush">
+      <img src="happy orange fruitcrush.jpg" alt="Product 7">
+      <h3>happy orange fruit crush</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(7, 'happy orange fruit crush', 170)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="hersheys milk shake almond flavour">
+      <img src="hersheys milk shake almond flavour .jpg" alt="Product 8">
+      <h3>hersheys milk shake almond flavour</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(8, 'hersheys milk shake almond flavour', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="hersheys milk shake chocolate flavour">
+      <img src="hersheys milk shake chocolate flavour.jpg" alt="Product 9">
+      <h3>hersheys milk shake chocolate flavour</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(9, 'hersheys milk shake chocolate flavour', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="hersheys milk shake cookies">
+      <img src="hersheys milk shake cokies.jpg" alt="Product 10">
+      <h3>hersheys milk shake cookies</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(10, 'hersheys milk shake cookies', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="hersheys milk shake coffee flavour">
+      <img src="hersheys milk shake vcoffee flavour.jpg" alt="Product 11">
+      <h3>hersheys milk shake coffee flavour</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(11, 'hersheys milk shake coffee flavour', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ice cream">
+      <img src="ice cream.webp" alt="Product 12">
+      <h3>ice cream - please provide which ice creams you need!</h3>
+      <p>Price: ₹as per your order</p>
+      <button onclick="addToCart(12, 'ice cream - ___________________', 0)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="milky bar large">
+      <img src="ilky bar large.jpg" alt="Product 13">
+      <h3>milky bar large</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(13, 'milky bar large', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="milky bar mini">
+      <img src="ilkybar mkini.jpg" alt="Product 14">
+      <h3>milky bar mini</h3>
+      <p>Price: ₹5</p>
+      <button onclick="addToCart(14, 'milky bar mini', 5)">Add to Cart</button>
+      </div>
+      
+    
+    <div class="product" data-name="kitkat">
+      <img src="itkat darkchocolate coated vafour.jpg" alt="Product 15">
+      <h3>kitkat darkchocolate coated wafer</h3>
+      <p>Price: ₹190</p>
+      <button onclick="addToCart(15, 'kitkat darkchocolate coated wafer', 190)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="kadala">
+      <img src="kadala.jpg" alt="Product 16">
+      <h3>kadala</h3>
+      <p>Price: ₹12</p>
+      <button onclick="addToCart(16, 'kadala', 12)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="kadalappala">
+      <img src="kadalappala.jpg" alt="Product 17">
+      <h3>kadalappala</h3>
+      <p>Price: ₹12</p>
+      <button onclick="addToCart(17, 'kadalappala', 12)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="kavitha sweets">
+      <img src="kavitha sweats.jpg" alt="Product 18">
+      <h3>kavitha sweets</h3>
+      <p>Price: ₹12</p>
+      <button onclick="addToCart(18, 'kavitha sweets', 12)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="kavitha sweets">
+      <img src="kavitha sweets.jpg" alt="Product 19">
+      <h3>kavitha sweets</h3>
+      <p>Price: ₹12</p>
+      <button onclick="addToCart(19, 'kavitha sweets', 12)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="kitkat">
+      <img src="kitkat medium.jpg" alt="Product 20">
+      <h3>kitkat medium</h3>
+      <p>Price: ₹27</p>
+      <button onclick="addToCart(20, 'kitkat medium', 27)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lays">
+      <img src="Lays.webp" alt="Product 1">
+      <h3>Lays - please provide which flavour in WhatsApp!</h3>
+      <button onclick="addToCart(1, 'Lays- ___________________', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="leafton tea">
+      <img src="leafton tea powder.jpg" alt="Product 2">
+      <h3>leafton tea powder</h3>
+      <p>Price: ₹100</p>
+      <button onclick="addToCart(2,'leafton tea powder',100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lemon wowzers">
+      <img src="lemon wowzers.jpg" alt="Product 3">
+      <h3>lemon wowzers</h3>
+      <p>Price: ₹5</p>
+      <button onclick="addToCart(3, 'lemon wowzers', 5)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lemon">
+      <img src="lemon.jpg" alt="Product 4">
+      <h3>lemon (100gm)</h3>
+      <p>Price: ₹80</p>
+      <button onclick="addToCart(4, 'lemon', 80)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lifebuoy">
+      <img src="lifebuoy neem and aloe.jpg" alt="Product 5">
+      <h3>lifebuoy neem and aloe</h3>
+      <p>Price: ₹395</p>
+      <button onclick="addToCart(5, 'lifebuoy neem and aloe', 395)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lifebuoy">
+      <img src="lifebuoy turmeric and honey.jpg" alt="Product 6">
+      <h3>lifebuoy turmeric and honey</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(6, 'lifebuoy turmeric and honey', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lux">
+      <img src="lux jasmine (small).jpg" alt="Product 7">
+      <h3>lux jasmine (small)</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(7, 'lux jasmine (small)', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lux">
+      <img src="lux lotus.jpg" alt="Product 8">
+      <h3>lux lotus</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(8, 'lux lotus', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lux">
+      <img src="lux lotus(small).jpg" alt="Product 17">
+      <h3>lux lotus(small)</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(17, 'lux lotus(small)', 40)">Add to Cart</button>
+      </div>
+      
+    
+    <div class="product" data-name="lux rose (small)">
+      <img src="lux rose (small).jpg" alt="Product 18">
+      <h3>lux rose (small)</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(18, 'lux rose (small)', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lux rose">
+      <img src="lux rose.jpg" alt="Product 19">
+      <h3>lux rose</h3>
+      <p>Price: ₹39</p>
+      <button onclick="addToCart(19, 'lux rose', 39)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="lux sandalwood">
+      <img src="lux sandalwood.jpg" alt="Product 20">
+      <h3>lux sandalwood</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(20, 'lux sandalwood', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="maa mango flavoured">
+      <img src="maa mango flaoured.jpg" alt="Product 1">
+      <h3>maa mango flavoured</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(1, 'maa mango flavoured', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="maggi creamy coconut milk powder">
+      <img src="maggi creamy coconut milkj powder.jpg" alt="Product 2">
+      <h3>maggi creamy coconut milk powder</h3>
+      <p>Price: ₹125</p>
+      <button onclick="addToCart(2, 'maggi creamy coconut milk powder', 125)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="margo soap">
+      <img src="margo.jpg" alt="Product 3">
+      <h3>margo soap</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(3, 'margo soap', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="medimix">
+      <img src="medimix.jpg" alt="Product 4">
+      <h3>medimix</h3>
+      <p>Price: ₹34</p>
+      <button onclick="addToCart(4, 'medimix', 34)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="meriba soda">
+      <img src="meriba soda.jpg" alt="Product 5">
+      <h3>meriba soda</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(5, 'meriba soda', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="milky bar">
+      <img src="milky bar.jpg" alt="Product 6">
+      <h3>milky bar</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(6, 'milky bar',10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="milma milk">
+      <img src="milma.jpg" alt="Product 7">
+      <h3>milma milk</h3>
+      <p>Price: ₹28</p>
+      <button onclick="addToCart(7, 'milma milk', 28)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="mirinda large">
+      <img src="mirinda large.jpg" alt="Product 8">
+      <h3>mirinda large</h3>
+      <p>Price: ₹100</p>
+      <button onclick="addToCart(8, 'mirinda large', 100)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="mirinda medium">
+      <img src="mirinda medium.jpg" alt="5 star">
+      <h3>mirinda medium</h3>
+      <p>Price: ₹40</p>
+      <button onclick="addToCart(1, 'mirinda medium', 40)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="mirinda">
+      <img src="mirinda.jpg" alt="7up 2.25l">
+      <h3>mirinda</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(2, 'mirinda', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="more light liquid detergent 5l">
+      <img src="more light liquid detergent 5l.jpg" alt="7up">
+      <h3>more light liquid detergent 5l</h3>
+      <p>Price: ₹349</p>
+      <button onclick="addToCart(3, 'more light liquid detergent 5l', 349)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="moreinz passionfruit squash">
+      <img src="moreinz passionfruit squash.jpg" alt="aashirvaad aatta">
+      <h3>moreinz passionfruit squash</h3>
+      <p>Price: ₹129</p>
+      <button onclick="addToCart(4, 'moreinz passionfruit squash', 129)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="morelight liquid detergent">
+      <img src="morelight liquid detergent.jpg" alt="agnee">
+      <h3>morelight liquid detergent</h3>
+      <p>Price: ₹99</p>
+      <button onclick="addToCart(5, 'morelight liquid detergent', 99)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="morelight soap">
+      <img src="morelight soap.jpg" alt="aldan kubboos">
+      <h3>morelight soap</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(6, 'morelight soap', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="mountain dew">
+      <img src="mountain dew.jpg" alt="amul dark chocolate">
+      <h3>mountain dew</h3>
+      <p>Price: ₹20 </p>
+      <button onclick="addToCart(7, 'mountain dew', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="mr kitchen dishwash">
+      <img src="mr kitchen dishwash.jpg" alt="Product 2">
+      <h3>mr kitchen dishwash</h3>
+      <p>Price: ₹30</p>
+      <button onclick="addToCart(8,'mr kitchen dishwash', 30 )">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="nabti richeese">
+      <img src="nabti richeese.jpg" alt="Product 3">
+      <h3>nabti richeese</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(3, 'nabti richeese', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="munch max">
+      <img src="munch max.jpg" alt="Product 4">
+      <h3>munch max</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(3, 'munch max', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="nabati pink lawa">
+      <img src="nabati pink lawa.jpg" alt="Product 5">
+      <h3>nabati pink lawa</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(5, 'nabati pink lawa', 10)">Add to Cart</button>
+      </div>
+      
+    
+    <div class="product" data-name="nabati richoco">
+      <img src="nabti richoco .jpg" alt="Product 6">
+      <h3>nabati richoco</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(6, 'nabati richoco', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="nabati cocojawa">
+      <img src="nabvati cocojawa.jpg" alt="Product 7">
+      <h3>nabati cocojawa</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(7, 'nabati cocojawa', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="nestle classic">
+      <img src="nestle cl;asdsic.jpg" alt="Product 8">
+      <h3>nestle classic</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(8, 'nestle classic', 10)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="nestle milkmaid">
+      <img src="nestle milkmaid.jpg" alt="Product 9">
+      <h3>nestle milkmaid</h3>
+      <p>Price: ₹147</p>
+      <button onclick="addToCart(9, 'nestle milkmaid', 147)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="noodles">
+      <img src="noodles.jpg" alt="Product 10">
+      <h3>noodles</h3>
+      <p>Price: ₹15</p>
+      <button onclick="addToCart(10, 'noodles', 15)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="orbit">
+      <img src="orbit 5.jpg" alt="Product 4">
+      <h3>orbit</h3>
+      <p>Price: ₹5</p>
+      <button onclick="addToCart(4, 'orbit', 5)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="orbit">
+      <img src="orbit.jpg" alt="Product 5">
+      <h3>orbit</h3>
+      <p>Price: ₹50</p>
+      <button onclick="addToCart(5, 'orbit', 50)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="macroni">
+      <img src="pasta.jpg" alt="Product 6">
+      <h3>macroni</h3>
+      <p>Price: ₹112</p>
+      <button onclick="addToCart(6, 'macroni', 112)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="pepsi large">
+      <img src="pepsi large.jpg" alt="Product 9">
+      <h3>pepsi large</h3>
+      <p>Price: ₹100</p>
+      <button onclick="addToCart(9, 'pepsi large', 100)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="pepsi">
+      <img src="pepsi.jpg" alt="Product 10">
+      <h3>pepsi</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(10, 'pepsi', 20)">Add to Cart</button>
+    </div>
+    
+    <div class="product" data-name="perk">
+      <img src="perk.jpg" alt="Product 11">
+      <h3>perk</h3>
+      <p>Price: ₹5</p>
+      <button onclick="addToCart(11, 'perk', 5)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="pfp mellow cake">
+      <img src="pfp mellow cake.jpg" alt="Product 12">
+      <h3>pfp mellow cake</h3>
+      <p>Price: ₹50</p>
+      <button onclick="addToCart(12, 'pfp mellow cake', 50)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="poppins">
+      <img src="poppins.jpg" alt="Product 14">
+      <h3>poppins</h3>
+      <p>Price: ₹2</p>
+      <button onclick="addToCart(14, 'poppins', 5)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="potatoes">
+      <img src="potatoes.jpg" alt="Product 15">
+      <h3>potatoes</h3>
+      <p>Price: ₹50</p>
+      <button onclick="addToCart(15, 'potatoes', 50)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="pril lime">
+      <img src="pril lime.jpg" alt="Product 16">
+      <h3>pril lime(large)</h3>
+      <p>Price: ₹44</p>
+      <button onclick="addToCart(16, 'pril lime', 44)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="red label">
+      <img src="red label.jpg" alt="Product 19">
+      <h3>red label</h3>
+      <p>Price: ₹155</p>
+      <button onclick="addToCart(19, 'red label', 155)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="shipton tea coco">
+      <img src="shipton tea coco.jpg" alt="Product 2">
+      <h3>shipton tea coco</h3>
+      <p>Price: ₹199</p>
+      <button onclick="addToCart(2,'shipton tea coco', 199)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="shipton tea powder 250 gm">
+      <img src="shipton tea powder 250 mgm.jpg" alt="Product 3">
+      <h3>shipton tea powder 250 gm</h3>
+      <p>Price: ₹95</p>
+      <button onclick="addToCart(3, 'shipton tea powder 250 gm', 95)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="shipton tea">
+      <img src="shipton tea.jpg" alt="Product 4">
+      <h3>shipton tea</h3>
+      <p>Price: ₹190</p>
+      <button onclick="addToCart(4, 'shipton tea', 190)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="shots">
+      <img src="shots.jpg" alt="Product 5">
+      <h3>shots</h3>
+      <p>Price: ₹2</p>
+      <button onclick="addToCart(5, 'shots', 2)">Add to Cart</button>
+      </div>
+      
+    <div class="product" data-name="comfort pink">
+      <img src="comfort pink.jpg" alt="Product 6">
+      <h3>comfort pink</h3>
+      <p>Price: ₹58</p>
+      <button onclick="addToCart(6, 'comfort pink', 58)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="skittles pink">
+      <img src="skittles pink.jpg" alt="Product 7">
+      <h3>skittles pink</h3>
+      <p>Price: ₹50</p>
+      <button onclick="addToCart(7, 'skittles pink', 50)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="skittles red">
+      <img src="skittles red.jpg" alt="Product 8">
+      <h3>skittles red</h3>
+      <p>Price: ₹50</p>
+      <button onclick="addToCart(8, 'skittles red', 50)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="snickers">
+      <img src="snickers.jpg" alt="Product 19">
+      <h3>snickers</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(19, 'snickers', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="soft drinks - please tell which soft drink in whatsapp!">
+      <img src="soft drinks.webp" alt="Product 20">
+      <h3>soft drinks - please tell which soft drink in whatsapp!</h3>
+      <p>Price: ₹as per your order</p>
+      <button onclick="addToCart(20, 'soft drink-___________________', as per your order)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="sting energy">
+      <img src="sting energy.jpg" alt="Product 2">
+      <h3>sting energy</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(2,'sting energy', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="sunlight matic liquid">
+      <img src="sunlight matic liquid.jpg" alt="Product 3">
+      <h3>sunlight matic liquid</h3>
+      <p>Price: ₹89</p>
+      <button onclick="addToCart(3, 'sunlight matic liquid', 89)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="supercheck mini">
+      <img src="supercheck mini.jpg" alt="Product 4">
+      <h3>supercheck mini</h3>
+      <p>Price: ₹5</p>
+      <button onclick="addToCart(4, 'supercheck mini', 5)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="supercheck">
+      <img src="supercheck.jpg" alt="Product 5">
+      <h3>supercheck</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(5, 'supercheck', 10)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="swing guava">
+      <img src="swing guava .jpg" alt="Product 6">
+      <h3>swing guava</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(6, 'swing guava', 10)">Add to Cart</button>
+      </div>
+      
+    
+    <div class="product" data-name="swing+ pomegrenate flavour">
+      <img src="swing+ pomegrenate flavour.jpg" alt="Product 7">
+      <h3>swing+ pomegrenate flavour</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(7, 'swing+ pomegrenate flavour', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="swing+ slurpy mango">
+      <img src="swing+ slurpy mango.jpg" alt="Product 8">
+      <h3>swing+ slurpy mango</h3>
+      <p>Price: ₹20</p>
+      <button onclick="addToCart(8, 'swing+ slurpy mango', 20)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="tang lemon">
+      <img src="tang lemon.jpg" alt="5 star">
+      <h3>tang lemon</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(1, 'tang lemon',170)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="tang mango">
+      <img src="tang mango.jpg" alt="7up 2.25l">
+      <h3>tang mango</h3>
+      <p>Price: ₹170</p>
+      <button onclick="addToCart(2, 'tang mango', 170)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="tata coffee">
+      <img src="tata coffee.jpg" alt="7up">
+      <h3>tata coffee</h3>
+      <p>Price: ₹130</p>
+      <button onclick="addToCart(3, 'tata coffee', 130)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="tide matic (850 ml)">
+      <img src="tide matic (850 ml).jpg" alt="aashirvaad aatta">
+      <h3>tide matic (850 ml)</h3>
+      <p>Price: ₹130</p>
+      <button onclick="addToCart(4, 'tide matic (850 ml)', 130)">Add to Cart</button>
+      </div>
+        
+      <div class="product" data-name="turmericpowder(100gm)">
+      <img src="turmericpowder.jpg" alt="aldan kubboos">
+      <h3>turmericpowder(100gm)</h3>
+      <p>Price: ₹38</p>
+      <button onclick="addToCart(6, 'turmericpowder(100gm)', 38)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine blue large">
+      <img src="ujala crisp and shine blue large.jpg" alt="amul dark chocolate">
+      <h3>ujala crisp and shine blue large</h3>
+      <p>Price: ₹150 </p>
+      <button onclick="addToCart(7, 'ujala crisp and shine blue large', 150)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine blue medium">
+      <img src="ujala crisp and shine blue medium.jpg" alt="Product 2">
+      <h3>ujala crisp and shine blue medium</h3>
+      <p>Price: ₹70</p>
+      <button onclick="addToCart(8,'ujala crisp and shine blue medium', 70 )">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine blue">
+      <img src="ujala crisp and shine blue.jpg" alt="Product 3">
+      <h3>ujala crisp and shine blue</h3>
+      <p>Price: ₹35</p>
+      <button onclick="addToCart(3, 'ujala crisp and shine blue', 35)">Add to Cart</button>
+      </div>
+      
+    
+    <div class="product" data-name="ujala crisp and shine green large">
+      <img src="ujala crisp and shine green large.jpg" alt="Product">
+      <h3>ujala crisp and shine green large</h3>
+      <p>Price: ₹150</p>
+      <button onclick="addToCart(3, 'ujala crisp and shine green large', 150)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine green medium">
+      <img src="ujala crisp and shine green medium.jpg" alt="Product">
+      <h3>ujala crisp and shine green medium</h3>
+      <p>Price: ₹120</p>
+      <button onclick="addToCart(5, 'ujala crisp and shine green medium', 120)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine pink large">
+      <img src="ujala crisp and shine pink large.jpg" alt="Product">
+      <h3>ujala crisp and shine pink large</h3>
+      <p>Price: ₹150</p>
+      <button onclick="addToCart(6, 'ujala crisp and shine pink large', 150)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine pink medium">
+      <img src="ujala crisp and shine pink medium.jpg" alt="Product">
+      <h3>ujala crisp and shine pink medium</h3>
+      <p>Price: ₹70</p>
+      <button onclick="addToCart(7, 'ujala crisp and shine pink medium', 70)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala crisp and shine pink">
+      <img src="ujala crisp and shine pink.jpg" alt="Product">
+      <h3>ujala crisp and shine pink</h3>
+      <p>Price: ₹70</p>
+      <button onclick="addToCart(8, 'ujala crisp and shine pink', 70)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala liquid detergent">
+      <img src="ujala liquid detergent.jpg" alt="Product">
+      <h3>ujala liquid detergent</h3>
+      <p>Price: ₹245</p>
+      <button onclick="addToCart(9, 'ujala liquid detergent', 245)">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="ujala">
+      <img src="ujala.jpg" alt="Product">
+      <h3>ujala</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(10, 'ujala', 10 )">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="vim lemon">
+      <img src="vim lemon.jpg" alt="Product">
+      <h3>vim lemon</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(1, 'vim lemon',10 )">Add to Cart</button>
+      </div>
+      
+      <div class="product" data-name="vim maha bar">
+      <img src="vim maha bar.jpg" alt="Product">
+      <h3>vim maha bar</h3>
+      <p>Price: ₹10</p>
+      <button onclick="addToCart(2, 'vim maha bar', 10)">Add to Cart</button>
+      </div>
 
-<div class="product" data-name="swing+ pomegrenate flavour">
-  <img src="swing+ pomegrenate flavour.jpg" alt="Product 7">
-  <h3>swing+ pomegrenate flavour</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(7, 'swing+ pomegrenate flavour', 20)">Add to Cart</button>
+    <div class="product" data-name="wheatflour">
+      <img src="wheatflour.jpg" alt="Wheat Flour">
+      <h3>Wheat Flour</h3>
+      <p>Price: ₹45</p>
+      <button onclick="addToCart(2, 'Wheat Flour', 45)">Add to Cart</button>
+    </div>
   </div>
-  
-  <div class="product" data-name="swing+ slurpy mango">
-  <img src="swing+ slurpy mango.jpg" alt="Product 8">
-  <h3>swing+ slurpy mango</h3>
-  <p>Price: ₹20</p>
-  <button onclick="addToCart(8, 'swing+ slurpy mango', 20)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="tang lemon">
-  <img src="tang lemon.jpg" alt="5 star">
-  <h3>tang lemon</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(1, 'tang lemon',170)">Add to Cart</button>
-  </div>
-    
-  <div class="product" data-name="tang mango">
-  <img src="tang mango.jpg" alt="7up 2.25l">
-  <h3>tang mango</h3>
-  <p>Price: ₹170</p>
-  <button onclick="addToCart(2, 'tang mango', 170)">Add to Cart</button>
-  </div>
-    
-  <div class="product" data-name="tata coffee">
-  <img src="tata coffee.jpg" alt="7up">
-  <h3>tata coffee</h3>
-  <p>Price: ₹130</p>
-  <button onclick="addToCart(3, 'tata coffee', 130)">Add to Cart</button>
-  </div>
-    
-  <div class="product" data-name="tide matic (850 ml)">
-  <img src="tide matic (850 ml).jpg" alt="aashirvaad aatta">
-  <h3>tide matic (850 ml)</h3>
-  <p>Price: ₹130</p>
-  <button onclick="addToCart(4, 'tide matic (850 ml)', 130)">Add to Cart</button>
-  </div>
-    
-  <div class="product" data-name="turmericpowder(100gm)">
-  <img src="turmericpowder.jpg" alt="aldan kubboos">
-  <h3>turmericpowder(100gm)</h3>
-  <p>Price: ₹38</p>
-  <button onclick="addToCart(6, 'turmericpowder(100gm)', 38)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine blue large">
-  <img src="ujala crisp and shine blue large.jpg" alt="amul dark chocolate">
-  <h3>ujala crisp and shine blue large</h3>
-  <p>Price: ₹150 </p>
-  <button onclick="addToCart(7, 'ujala crisp and shine blue large', 150)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine blue medium">
-  <img src="ujala crisp and shine blue medium.jpg" alt="Product 2">
-  <h3>ujala crisp and shine blue medium</h3>
-  <p>Price: ₹70</p>
-  <button onclick="addToCart(8,'ujala crisp and shine blue medium', 70 )">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine blue">
-  <img src="ujala crisp and shine blue.jpg" alt="Product 3">
-  <h3>ujala crisp and shine blue</h3>
-  <p>Price: ₹35</p>
-  <button onclick="addToCart(3, 'ujala crisp and shine blue', 35)">Add to Cart</button>
-  </div>
-  
 
-<div class="product" data-name="ujala crisp and shine green large">
-  <img src="ujala crisp and shine green large.jpg" alt="Product">
-  <h3>ujala crisp and shine green large</h3>
-  <p>Price: ₹150</p>
-  <button onclick="addToCart(3, 'ujala crisp and shine green large', 150)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine green medium">
-  <img src="ujala crisp and shine green medium.jpg" alt="Product">
-  <h3>ujala crisp and shine green medium</h3>
-  <p>Price: ₹120</p>
-  <button onclick="addToCart(5, 'ujala crisp and shine green medium', 120)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine pink large">
-  <img src="ujala crisp and shine pink large.jpg" alt="Product">
-  <h3>ujala crisp and shine pink large</h3>
-  <p>Price: ₹150</p>
-  <button onclick="addToCart(6, 'ujala crisp and shine pink large', 150)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine pink medium">
-  <img src="ujala crisp and shine pink medium.jpg" alt="Product">
-  <h3>ujala crisp and shine pink medium</h3>
-  <p>Price: ₹70</p>
-  <button onclick="addToCart(7, 'ujala crisp and shine pink medium', 70)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala crisp and shine pink">
-  <img src="ujala crisp and shine pink.jpg" alt="Product">
-  <h3>ujala crisp and shine pink</h3>
-  <p>Price: ₹70</p>
-  <button onclick="addToCart(8, 'ujala crisp and shine pink', 70)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala liquid detergent">
-  <img src="ujala liquid detergent.jpg" alt="Product">
-  <h3>ujala liquid detergent</h3>
-  <p>Price: ₹245</p>
-  <button onclick="addToCart(9, 'ujala liquid detergent', 245)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="ujala">
-  <img src="ujala.jpg" alt="Product">
-  <h3>ujala</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(10, 'ujala', 10 )">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="vim lemon">
-  <img src="vim lemon.jpg" alt="Product">
-  <h3>vim lemon</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(1, 'vim lemon',10 )">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="vim maha bar">
-  <img src="vim maha bar.jpg" alt="Product">
-  <h3>vim maha bar</h3>
-  <p>Price: ₹10</p>
-  <button onclick="addToCart(2, 'vim maha bar', 10)">Add to Cart</button>
-  </div>
-  
-  <div class="product" data-name="wheatflour">
-  <img src="wheatflour.jpg" alt="Product">
-  <h3>wheatflour</h3>
-  <p>Price: ₹45</p>
-  <button onclick="addToCart(4, 'wheatflour', 45)">Add to Cart</button>
-  </div>
-  
-  
-
-</div>
-
-<div id="cart">
+  <div id="cart">
     <h3>Your Cart</h3>
     <ul id="cart-items"></ul>
     <p>Total: ₹<span id="total-price">0.00</span></p>
@@ -1493,46 +1494,49 @@
   <script>
     const cart = [];
 
-    // Add to cart function
+    function searchProducts() {
+      let input = document.getElementById('search-bar').value.toLowerCase();
+      let products = document.querySelectorAll('.product');
+
+      products.forEach(product => {
+        let productName = product.getAttribute('data-name').toLowerCase();
+        product.style.display = productName.includes(input) ? "block" : "none";
+      });
+    }
+
     function addToCart(id, name, price) {
-      const cartItem = cart.find(item => item.id === id);
-      if (cartItem) {
-        cartItem.quantity++;
+      const item = cart.find(item => item.id === id);
+      if (item) {
+        item.quantity++;
       } else {
         cart.push({ id, name, price, quantity: 1 });
       }
       updateCart();
     }
 
-    // Update cart
     function updateCart() {
-      const cartItemsContainer = document.getElementById('cart-items');
-      const totalPriceElement = document.getElementById('total-price');
-      const cartContainer = document.getElementById('cart');
+      const cartItemsContainer = document.getElementById("cart-items");
+      const totalPriceElement = document.getElementById("total-price");
+      const cartContainer = document.getElementById("cart");
 
       if (cart.length > 0) {
-        cartContainer.style.display = 'block';
+        cartContainer.style.display = "block";
       } else {
-        cartContainer.style.display = 'none';
+        cartContainer.style.display = "none";
       }
 
-      cartItemsContainer.innerHTML = '';
+      cartItemsContainer.innerHTML = "";
       cart.forEach(item => {
-        const cartItemElement = document.createElement('li');
-        cartItemElement.textContent = `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}`;
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.onclick = () => removeFromCart(item.id);
-        cartItemElement.appendChild(deleteBtn);
-        cartItemsContainer.appendChild(cartItemElement);
+        let li = document.createElement("li");
+        li.innerHTML = `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}
+                        <button onclick="removeFromCart(${item.id})">❌</button>`;
+        cartItemsContainer.appendChild(li);
       });
 
       const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-      totalPriceElement.textContent = totalPrice.toFixed(2);
+      totalPriceElement.innerText = totalPrice.toFixed(2);
     }
 
-    // Remove from cart function
     function removeFromCart(id) {
       const index = cart.findIndex(item => item.id === id);
       if (index !== -1) {
@@ -1541,41 +1545,21 @@
       }
     }
 
-    // Proceed to buy
     function proceedToBuy() {
-      let message = "Your cart contains the following items:\n\n";
-
+      let message = "🛍️ Order from Muttam Souq:%0A";
       cart.forEach(item => {
-        message += `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}\n`;
+        message += `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}%0A`;
       });
 
-      const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-      message += `\nTotal: ₹${totalPrice.toFixed(2)}\n\nPlease proceed with the payment.`;
-
-      const phoneNumber = "9497025313"; 
-      const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      let phoneNumber = "9497025313"; 
+      let whatsappLink = `https://wa.me/${phoneNumber}?text=${message}`;
       window.open(whatsappLink, "_blank");
     }
 
-    // Search Products Function
-    function searchProducts() {
-      let input = document.getElementById('search-bar').value.toLowerCase();
-      let products = document.querySelectorAll('.product');
-
-      products.forEach(product => {
-        let productName = product.getAttribute('data-name').toLowerCase();
-        if (productName.includes(input)) {
-          product.style.display = 'block';
-        } else {
-          product.style.display = 'none';
-        }
-      });
+    function showCart() {
+      document.getElementById("cart").style.display = "block";
     }
   </script>
-
-  <div>
-    <p>&copy; <span id="year"></span> Muttam Souq Supermarket. All Rights Reserved.</p>
-  </div>
 
 </body>
 </html>
