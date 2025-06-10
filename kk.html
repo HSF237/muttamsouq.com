@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Muttamsouq</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background: #f5f6fa;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    text-decoration: none;
+    color: #2a9d8f;
+    transition: color 0.2s ease-in-out;
+  }
+  a:hover {
+    color: #21867a;
+  }
+  /* Header */
+  header {
+    background: #2a9d8f;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+  nav {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  nav a {
+    color: white;
+    font-weight: 600;
+  }
+  .cart-btn {
+    position: relative;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cart-count {
+    position: absolute;
+    top: -8px;
+    right: -12px;
+    background: #e76f51;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    font-weight: 700;
+  }
+
+  /* Main layout */
+  main {
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .filters {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  .filters input[type="search"] {
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    flex-grow: 1;
+    max-width: 300px;
+  }
+  .filters select {
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+  }
+
+  /* Products grid */
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 1.5rem;
+  }
+  .product-card, .product {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 8px 15px -7px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+  }
+  .product-card:hover, .product:hover {
+    box-shadow: 0 12px 25px -10px rgba(0,0,0,0.25);
+  }
+  .product img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: contain;
+    height: 150px;
+    margin-bottom: 1rem;
+  }
+  .product-title, .product h3 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    flex-grow: 1;
+  }
+  .product-category {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #777;
+    margin-bottom: 0.5rem;
+  }
+  .product-price, .product p {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #2a9d8f;
+  }
+  .btn-add, .product button {
+    background: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .btn-add:hover, .product button:hover {
+    background: #1c6d6a;
+  }
+
+  /* Cart sidebar */
+  .cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    max-width: 100vw;
+    height: 100vh;
+    background: white;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.2);
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    z-index: 101;
+  }
+  .cart-sidebar.open {
+    right: 0;
+  }
+  .cart-header {
+    background: #2a9d8f;
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .cart-close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .cart-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+  }
+  .cart-empty {
+    text-align: center;
+    color: #777;
+    margin-top: 3rem;
+    font-style: italic;
+  }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.7rem;
+  }
+  .cart-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: contain;
+  }
+  .cart-item-info {
+    flex-grow: 1;
+  }
+  .cart-item-title {
+    font-weight: 600;
+    margin: 0 0 0.3rem 0;
+  }
+  .cart-item-price {
+    color: #2a9d8f;
+    font-weight: 700;
+  }
+  .cart-item-qty {
+    display: flex;
+    align-items: center;
+  }
+  .qty-btn {
+    background: #e76f51;
+    border: none;
+    color: white;
+    padding: 0.2rem 0.7rem;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .qty-number {
+    margin: 0 0.5rem;
+    min-width: 20px;
+    text-align: center;
+  }
+  .remove-cart-item {
+    background: transparent;
+    border: none;
+    color: #e76f51;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding-left: 0.5rem;
+  }
+  .cart-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #ddd;
+  }
+  .cart-total {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .checkout-btn {
+    width: 100%;
+    background: #2a9d8f;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.8rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .checkout-btn:hover {
+    background: #1c6d6a;
+  }
+
+  /* Responsive for small screens */
+  @media (max-width: 480px) {
+    .cart-sidebar {
+      width: 100vw;
+    }
+  }
+
+  /* Checkout modal */
+  .modal-overlay {
+    position: fixed;
+    top:0; left:0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 110;
+  }
+  .modal-overlay.active {
+    display: flex;
+  }
+  .modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 95%;
+    padding: 2rem 2.5rem;
+    text-align: center;
+  }
+  .modal h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #2a9d8f;
+  }
+  .modal p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+  .modal button {
+    background: #2a9d8f;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.6rem;
+    font-weight: 700;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .modal button:hover {
+    background: #1c6d6a;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Muttam Souq</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#cart" class="cart-btn" id="cart-btn">
+      Cart <span class="cart-count" id="cart-count" style="display:none;">0</span>
+    </a>
+  </nav>
+</header>
+
+<main>
+  <div class="filters">
+    <input type="search" id="search-input" placeholder="Search products..." aria-label="Search products" />
+    <select id="category-filter" aria-label="Filter by category">
+      <option value="all">All Categories</option>
+    </select>
+  </div>
+
+  <section class="product-list" id="product-list" aria-label="Product list">
+    <!-- Products rendered by JS -->
+  </section>
+</main>
+
+<!-- Cart Sidebar -->
+<aside class="cart-sidebar" id="cart-sidebar" aria-label="Shopping cart" aria-hidden="true">
+  <div class="cart-header">
+    Your Cart
+    <button aria-label="Close cart" class="cart-close-btn" id="cart-close-btn">&times;</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <!-- Cart items here -->
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total" id="cart-total">Total: ₹0.00</div>
+    <button id="checkout-btn" class="checkout-btn" disabled>Checkout</button>
+  </div>
+</aside>
+
+<!-- Checkout modal -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
+  <div class="modal">
+    <h2 id="modal-title">Thank you for your purchase!</h2>
+    <p id="modal-desc">Your order has been placed successfully. We appreciate your business.</p>
+    <button id="modal-close-btn">Close</button>
+  </div>
+</div>
+
+<script>
+  (() => {
+    // Full product list with images as provided.
+    // Prices are numbers; some with price as 0 or NaN handled below.
+    const products = [
+      {id:1,title:"Onion",priceMin:40,priceMax:70,price:40,image:"onion (1).webp",category:"Vegetables"},
+      {id:2,title:"Tomato",priceMin:20,priceMax:50,price:20,image:"tomato (1).webp",category:"Vegetables"},
+      {id:3,title:"Potato",price:20,image:"potato (1).webp",category:"Vegetables"},
+      {id:4,title:"Green Chilli",price:72,image:"greenchilli (1).webp",category:"Vegetables"},
+      {id:5,title:"Carrot",price:37,image:"carrot (1).webp",category:"Vegetables"},
+      {id:6,title:"Cabbage",price:10,image:"cabbage (1).webp",category:"Vegetables"},
+      {id:7,title:"Beans",price:45,image:"beens (1).webp",category:"Vegetables"},
+      {id:8,title:"Pomegranate",price:55,image:"pomegrenate (1).webp",category:"Fruits"},
+      {id:9,title:"Big Banana",price:5,image:"bigbanana (1).webp",category:"Fruits"},
+      {id:10,title:"Black Grapes",price:100,image:"balckgrapes.webp",category:"Fruits"},
+      {id:11,title:"Orange",price:20,image:"orange.webp",category:"Fruits"},
+      {id:12,title:"Papaya",price:72,image:"papaya (1).webp",category:"Fruits"},
+      {id:13,title:"Green Grapes",price:136,image:"greengrapes (1).webp",category:"Fruits"},
+      {id:14,title:"Green Mango",price:37,image:"greenmango (1).webp",category:"Fruits"},
+      {id:15,title:"Cucumber",price:10,image:"cucumber (1).webp",category:"Vegetables"},
+      {id:16,title:"Curry Leaves",price:45,image:"curryleaves (1).webp",category:"Vegetables"},
+      {id:17,title:"Kanthari",price:55,image:"kanthari (1).webp",category:"Vegetables"},
+      {id:18,title:"Gooseberry",price:37,image:"gooseberry (1).webp",category:"Fruits"},
+      {id:19,title:"Robusta",price:10,image:"robust (1).webp",category:"Other"},
+      {id:20,title:"Ginger",price:45,image:"ginger (1).webp",category:"Vegetables"},
+      {id:21,title:"Garlic",price:55,image:"garlic (1).webp",category:"Vegetables"},
+      {id:22,title:"5 Star",price:5,image:"5 star.jpg",category:"Snacks"},
+      {id:23,title:"7up 2.25L",price:100,image:"7up 2.25l.jpg",category:"Beverages"},
+      {id:24,title:"7up",price:20,image:"7up.jpg",category:"Beverages"},
+      {id:25,title:"Aashirvaad Atta (1kg)",price:72,image:"atta.webp",category:"Bakery"},
+      {id:26,title:"Aashirvaad Atta (2kg)",price:136,image:"atta.webp",category:"Bakery"},
+      {id:27,title:"Aashirvaad Atta (3kg)",price:37,image:"atta.webp",category:"Bakery"},
+      {id:28,title:"Agnee",price:10,image:"agnee.jpg",category:"Other"},
+      {id:29,title:"Aldan Kubboos",price:45,image:"aldan kubboos.jpg",category:"Other"},
+      {id:30,title:"Amul Dark Chocolate",price:55,image:"amul dark chocolate.jpg",category:"Snacks"},
+      {id:31,title:"Amul Milk Chocolate",price:55,image:"amul milk chocolate.jpg",category:"Snacks"},
+      {id:32,title:"Amul Mithai Mate",price:126,image:"amul mithai mate.jpg",category:"Snacks"},
+      {id:33,title:"Apples (1kg)",price:200,image:"apples.jpg",category:"Fruits"},
+      {id:34,title:"Appy Kiwi Fruit Crush",price:190,image:"appy kiwi fruit crush.jpg",category:"Beverages"},
+      {id:35,title:"Avocado (1kg)",price:450,image:"avocado.avif",category:"Fruits"},
+      {id:36,title:"bakers alfaham masala",price:90,image:"bakers alfaham masalal.jpg",category:"Spices"},
+      {id:37,title:"bakers bread crumbs",price:30,image:"bakers bread crumbs.jpg",category:"Bakery"},
+      {id:38,title:"bakers butter chicken masala",price:50,image:"bakers butter chicken masala.jpg",category:"Spices"},
+      {id:39,title:"bakers chat masala",price:80,image:"bakers chat masala.jpg",category:"Spices"},
+      {id:40,title:"bakers chicken tikka masala",price:75,image:"bakers chicken tikka masala.jpg",category:"Spices"},
+      {id:41,title:"bakers kabsa masala",price:85,image:"bakers kabsa masala.jpg",category:"Spices"},
+      {id:42,title:"bakers noodles seasoning mix",price:35,image:"bakers noodles seasoning mkix.jpg",category:"Spices"},
+      {id:43,title:"blackgrapes",price:85,image:"balckgrapes.webp",category:"Fruits"},
+      {id:44,title:"banana chips",price:90,image:"banana chips.webp",category:"Snacks"},
+      {id:45,title:"barone",price:10,image:"barone.jpg",category:"Snacks"},
+      {id:46,title:"bingo  original potatoe chips chilli charged tomato",price:10,image:"bingo  original potatoe chips chilli charged tomato.jpg",category:"Snacks"},
+      {id:47,title:"bingo hashtags",price:10,image:"bingo hashtags.jpg",category:"Snacks"},
+      {id:48,title:"bingo onion",price:10,image:"bingo onion.jpg",category:"Snacks"},
+      {id:49,title:"bingo tomato",price:5,image:"bingo tomato.jpg",category:"Snacks"},
+      {id:50,title:"boomer krunch",price:50,image:"boomer krunch.jpg",category:"Snacks"},
+      {id:51,title:"bread(300gm)",price:40,image:"bread.jpg",category:"Bakery"},
+      {id:52,title:"bread(150gm)",price:25,image:"bread.jpg",category:"Bakery"},
+      {id:53,title:"butter",price:60,image:"butter.jpg",category:"Dairy"},
+      {id:54,title:"cadbury nutties nutties favorites forever",price:100,image:"cadbury nutties nutties favorites forever.jpg",category:"Snacks"},
+      {id:55,title:"cashews",price:980,image:"cashews.avif",category:"Nuts"},
+      {id:56,title:"chandrika ayurvedic soap",price:35,image:"chandrika ayurvedic soap.jpg",category:"Personal Care"},
+      {id:57,title:"citys master chef broast masala",price:52,image:"city's master chef broast masala.jpg",category:"Spices"},
+      {id:58,title:"citys master chef kabsa masala",price:52,image:"city's master chef kabsa masala.jpg",category:"Spices"},
+      {id:59,title:"citys master chef kasoori methi",price:30,image:"city's master chef kasoori methi.jpg",category:"Spices"},
+      {id:60,title:"citys master chef manthi masala",price:52,image:"city's master chef manthi masala.jpg",category:"Spices"},
+      {id:61,title:"comfort blue big",price:120,image:"comfort blue big.jpg",category:"Personal Care"},
+      {id:62,title:"comfort pink",price:55,image:"comfort pink.jpg",category:"Personal Care"},
+      {id:63,title:"condiments",price:null,image:"condiments.jpg",category:"Other"},
+      {id:64,title:"coriendar powder(100gm)",price:21,image:"coriendar powder.jpg",category:"Spices"},
+      {id:65,title:"frozen corn(200gm)",price:55,image:"corn.jpeg",category:"Frozen"},
+      {id:66,title:"crust and crumb corn flavour",price:28,image:"crust and crumb corn flavour.jpg",category:"Snacks"},
+      {id:67,title:"janatha curd(450gm)",price:30,image:"curd.jpg",category:"Dairy"},
+      {id:68,title:"milky mist curd(400gm)",price:40,image:"curd.jpg",category:"Dairy"},
+      {id:69,title:"dailee lemon",price:10,image:"dailee lemon.jpg",category:"Beverages"},
+      {id:70,title:"dailee",price:10,image:"dailee.jpg",category:"Beverages"},
+      {id:71,title:"dairy milk silk oreo",price:100,image:"dairy mi9lk silk oreo.jpg",category:"Snacks"},
+      {id:72,title:"dairy milk silk bubbly",price:210,image:"dairy milk silk bubbly.jpg",category:"Snacks"},
+      {id:73,title:"dairy milk silk fruit&nut",price:100,image:"dairy milk silk fruit&nut.jpg",category:"Snacks"},
+      {id:74,title:"dairy milk silk hazlenut",price:100,image:"dairy milk silk hazlenut.jpg",category:"Snacks"},
+      {id:75,title:"dairy milk silk roast almond",price:100,image:"dairy milk silk roast almond.jpg",category:"Snacks"},
+      {id:76,title:"dairymilk crispello",price:40,image:"dairymilk crispello.jpg",category:"Snacks"},
+      {id:77,title:"dairymilk ganache",price:100,image:"dairymilk ganache.jpg",category:"Snacks"},
+      {id:78,title:"dairy milk silk mousse",price:100,image:"daiury milk silk mousse.jpg",category:"Snacks"},
+      {id:79,title:"dates d'Algeria",price:180,image:"dates dÁlgeria.jpg",category:"Fruits"},
+      {id:80,title:"dates ajwa",price:1200,image:"dates.jpg",category:"Fruits"},
+      {id:81,title:"dairy milk",price:30,image:"diary milk.webp",category:"Snacks"},
+      {id:82,title:"exo",price:86,image:"exo.jpg",category:"Other"},
+      {id:83,title:"fantastic 4D",price:10,image:"fantastic 4d.jpg",category:"Snacks"},
+      {id:84,title:"galaxy",price:10,image:"galaxy 5.jpg",category:"Snacks"},
+      {id:85,title:"gems duo pack",price:20,image:"gems duo pack.jpg",category:"Snacks"},
+      {id:86,title:"grandma's grape squash",price:100,image:"grandma's grape squash.jpg",category:"Beverages"},
+      {id:87,title:"grandma's mango squash",price:90,image:"grandma's mango squash.jpg",category:"Beverages"},
+      {id:88,title:"grandma's orange squash",price:130,image:"grandma's orange squash.jpg",category:"Beverages"},
+      {id:89,title:"grandma's pineapple squash",price:100,image:"grandma's pineapple squash.jpg",category:"Beverages"},
+      {id:90,title:"grandma's rice palada payasam mix",price:82,image:"grandma's rice palada payasam mix.jpg",category:"Other"},
+      {id:91,title:"grandma's semiya payasam mix",price:82,image:"grandma's semiya payasam mix.jpg",category:"Other"},
+      {id:92,title:"green apple fruit crush",price:170,image:"green apple fruit crush.jpg",category:"Beverages"},
+      {id:93,title:"hamam",price:10,image:"hamam.jpg",category:"Personal Care"},
+      {id:94,title:"happy badam fruit crush",price:250,image:"happy badam fruit crush.jpg",category:"Beverages"},
+      {id:95,title:"happy butterscotch fruit crush",price:170,image:"happy butterscotch fruit crush.jpg",category:"Beverages"},
+      {id:96,title:"happy grapefruit squash",price:130,image:"happy grapefruit squash.jpg",category:"Beverages"},
+      {id:97,title:"happy litchi fruit crush",price:170,image:"happy litchi fruit crush.jpg",category:"Beverages"},
+      {id:98,title:"happy orange fruit crush",price:170,image:"happy orange fruitcrush.jpg",category:"Beverages"},
+      {id:99,title:"hersheys milk shake almond flavour",price:40,image:"hersheys milk shake almond flavour .jpg",category:"Beverages"},
+      {id:100,title:"hersheys milk shake chocolate flavour",price:40,image:"hersheys milk shake chocolate flavour.jpg",category:"Beverages"},
+      {id:101,title:"hersheys milk shake cookies",price:40,image:"hersheys milk shake cokies.jpg",category:"Beverages"},
+      {id:102,title:"hersheys milk shake coffee flavour",price:40,image:"hersheys milk shake vcoffee flavour.jpg",category:"Beverages"},
+      {id:103,title:"ice cream - please provide which ice creams you need!",price:0,image:"ice cream.webp",category:"Frozen"},
+      {id:104,title:"milky bar large",price:40,image:"ilky bar large.jpg",category:"Snacks"},
+      {id:105,title:"milky bar mini",price:5,image:"ilkybar mkini.jpg",category:"Snacks"},
+      {id:106,title:"kitkat darkchocolate coated wafer",price:190,image:"itkat darkchocolate coated vafour.jpg",category:"Snacks"},
+      {id:107,title:"kadala",price:12,image:"kadala.jpg",category:"Other"},
+      {id:108,title:"kadalappala",price:12,image:"kadalappala.jpg",category:"Other"},
+      {id:109,title:"kavitha sweets",price:12,image:"kavitha sweats.jpg",category:"Snacks"},
+      {id:110,title:"kavitha sweets",price:12,image:"kavitha sweets.jpg",category:"Snacks"},
+      {id:111,title:"kitkat medium",price:27,image:"kitkat medium.jpg",category:"Snacks"},
+      {id:112,title:"Lays - please provide which flavour in WhatsApp!",price:10,image:"Lays.webp",category:"Snacks"},
+      {id:113,title:"leafton tea powder",price:100,image:"leafton tea powder.jpg",category:"Beverages"},
+      {id:114,title:"lemon wowzers",price:5,image:"lemon wowzers.jpg",category:"Snacks"},
+      {id:115,title:"lemon (100gm)",price:80,image:"lemon.jpg",category:"Vegetables"},
+      {id:116,title:"lifebuoy neem and aloe",price:395,image:"lifebuoy neem and aloe.jpg",category:"Personal Care"},
+      {id:117,title:"lifebuoy turmeric and honey",price:10,image:"lifebuoy turmeric and honey.jpg",category:"Personal Care"},
+      {id:118,title:"lux jasmine (small)",price:10,image:"lux jasmine (small).jpg",category:"Personal Care"},
+      {id:119,title:"lux lotus",price:10,image:"lux lotus.jpg",category:"Personal Care"},
+      {id:120,title:"lux lotus(small)",price:40,image:"lux lotus(small).jpg",category:"Personal Care"},
+      {id:121,title:"lux rose (small)",price:10,image:"lux rose (small).jpg",category:"Personal Care"},
+      {id:122,title:"lux rose",price:39,image:"lux rose.jpg",category:"Personal Care"},
+      {id:123,title:"lux sandalwood",price:40,image:"lux sandalwood.jpg",category:"Personal Care"},
+      {id:124,title:"maa mango flavoured",price:40,image:"maa mango flaoured.jpg",category:"Beverages"},
+      {id:125,title:"maggi creamy coconut milk powder",price:125,image:"maggi creamy coconut milkj powder.jpg",category:"Spices"},
+      {id:126,title:"margo soap",price:10,image:"margo.jpg",category:"Personal Care"},
+      {id:127,title:"medimix",price:34,image:"medimix.jpg",category:"Personal Care"},
+      {id:128,title:"meriba soda",price:20,image:"meriba soda.jpg",category:"Beverages"},
+      {id:129,title:"milky bar",price:10,image:"milky bar.jpg",category:"Snacks"},
+      {id:130,title:"milma milk",price:28,image:"milma.jpg",category:"Dairy"},
+      {id:131,title:"mirinda large",price:100,image:"mirinda large.jpg",category:"Beverages"},
+      {id:132,title:"mirinda medium",price:40,image:"mirinda medium.jpg",category:"Beverages"},
+      {id:133,title:"mirinda",price:20,image:"mirinda.jpg",category:"Beverages"},
+      {id:134,title:"more light liquid detergent 5l",price:349,image:"more light liquid detergent 5l.jpg",category:"Household"},
+      {id:135,title:"moreinz passionfruit squash",price:129,image:"moreinz passionfruit squash.jpg",category:"Beverages"},
+      {id:136,title:"morelight liquid detergent",price:99,image:"morelight liquid detergent.jpg",category:"Household"},
+      {id:137,title:"morelight soap",price:10,image:"morelight soap.jpg",category:"Personal Care"},
+      {id:138,title:"mountain dew",price:20,image:"mountain dew.jpg",category:"Beverages"},
+      {id:139,title:"mr kitchen dishwash",price:30,image:"mr kitchen dishwash.jpg",category:"Household"},
+      {id:140,title:"nabti richeese",price:10,image:"nabti richeese.jpg",category:"Snacks"},
+      {id:141,title:"munch max",price:20,image:"munch max.jpg",category:"Snacks"},
+      {id:142,title:"nabati pink lawa",price:10,image:"nabati pink lawa.jpg",category:"Snacks"},
+      {id:143,title:"nabati richoco",price:10,image:"nabti richoco .jpg",category:"Snacks"},
+      {id:144,title:"nabati cocojawa",price:10,image:"nabvati cocojawa.jpg",category:"Snacks"},
+      {id:145,title:"nestle classic",price:10,image:"nestle cl;asdsic.jpg",category:"Snacks"},
+      {id:146,title:"nestle milkmaid",price:147,image:"nestle milkmaid.jpg",category:"Snacks"},
+      {id:147,title:"noodles",price:15,image:"noodles.jpg",category:"Snacks"},
+      {id:148,title:"orbit",price:5,image:"orbit 5.jpg",category:"Snacks"},
+      {id:149,title:"orbit",price:50,image:"orbit.jpg",category:"Snacks"},
+      {id:150,title:"macroni",price:112,image:"pasta.jpg",category:"Snacks"},
+      {id:151,title:"pepsi large",price:100,image:"pepsi large.jpg",category:"Beverages"},
+      {id:152,title:"pepsi",price:20,image:"pepsi.jpg",category:"Beverages"},
+      {id:153,title:"perk",price:5,image:"perk.jpg",category:"Snacks"},
+      {id:154,title:"pfp mellow cake",price:50,image:"pfp mellow cake.jpg",category:"Snacks"},
+      {id:155,title:"poppins",price:2,image:"poppins.jpg",category:"Snacks"},
+      {id:156,title:"potatoes",price:50,image:"potatoes.jpg",category:"Vegetables"},
+      {id:157,title:"pril lime",price:44,image:"pril lime.jpg",category:"Household"},
+      {id:158,title:"red label",price:155,image:"red label.jpg",category:"Beverages"},
+      {id:159,title:"shipton tea coco",price:199,image:"shipton tea coco.jpg",category:"Beverages"},
+      {id:160,title:"shipton tea powder 250 gm",price:95,image:"shipton tea powder 250 mgm.jpg",category:"Beverages"},
+      {id:161,title:"shipton tea",price:190,image:"shipton tea.jpg",category:"Beverages"},
+      {id:162,title:"shots",price:2,image:"shots.jpg",category:"Snacks"},
+      {id:163,title:"comfort pink",price:58,image:"comfort pink.jpg",category:"Personal Care"},
+      {id:164,title:"skittles pink",price:50,image:"skittles pink.jpg",category:"Snacks"},
+      {id:165,title:"skittles red",price:50,image:"skittles red.jpg",category:"Snacks"},
+      {id:166,title:"snickers",price:20,image:"snickers.jpg",category:"Snacks"},
+      {id:167,title:"soft drinks - please tell which soft drink in whatsapp!",price:0,image:"soft drinks.webp",category:"Beverages"},
+      {id:168,title:"sting energy",price:20,image:"sting energy.jpg",category:"Beverages"},
+      {id:169,title:"sunlight matic liquid",price:89,image:"sunlight matic liquid.jpg",category:"Household"},
+      {id:170,title:"supercheck mini",price:5,image:"supercheck mini.jpg",category:"Snacks"},
+      {id:171,title:"supercheck",price:10,image:"supercheck.jpg",category:"Snacks"},
+      {id:172,title:"swing guava",price:10,image:"swing guava .jpg",category:"Beverages"},
+      {id:173,title:"swing+ pomegrenate flavour",price:20,image:"swing+ pomegrenate flavour.jpg",category:"Beverages"},
+      {id:174,title:"swing+ slurpy mango",price:20,image:"swing+ slurpy mango.jpg",category:"Beverages"},
+      {id:175,title:"tang lemon",price:170,image:"tang lemon.jpg",category:"Beverages"},
+      {id:176,title:"tang mango",price:170,image:"tang mango.jpg",category:"Beverages"},
+      {id:177,title:"tata coffee",price:130,image:"tata coffee.jpg",category:"Beverages"},
+      {id:178,title:"tide matic (850 ml)",price:130,image:"tide matic (850 ml).jpg",category:"Household"},
+      {id:179,title:"turmericpowder(100gm)",price:38,image:"turmericpowder.jpg",category:"Spices"},
+      {id:180,title:"ujala crisp and shine blue large",price:150,image:"ujala crisp and shine blue large.jpg",category:"Household"},
+      {id:181,title:"ujala crisp and shine blue medium",price:70,image:"ujala crisp and shine blue medium.jpg",category:"Household"},
+      {id:182,title:"ujala crisp and shine blue",price:35,image:"ujala crisp and shine blue.jpg",category:"Household"},
+      {id:183,title:"ujala crisp and shine green large",price:150,image:"ujala crisp and shine green large.jpg",category:"Household"},
+      {id:184,title:"ujala crisp and shine green medium",price:120,image:"ujala crisp and shine green medium.jpg",category:"Household"},
+      {id:185,title:"ujala crisp and shine pink large",price:150,image:"ujala crisp and shine pink large.jpg",category:"Household"},
+      {id:186,title:"ujala crisp and shine pink medium",price:70,image:"ujala crisp and shine pink medium.jpg",category:"Household"},
+      {id:187,title:"ujala crisp and shine pink",price:70,image:"ujala crisp and shine pink.jpg",category:"Household"},
+      {id:188,title:"ujala liquid detergent",price:245,image:"ujala liquid detergent.jpg",category:"Household"},
+      {id:189,title:"ujala",price:10,image:"ujala.jpg",category:"Household"},
+      {id:190,title:"vim lemon",price:10,image:"vim lemon.jpg",category:"Household"},
+      {id:191,title:"vim maha bar",price:10,image:"vim maha bar.jpg",category:"Household"},
+      {id:192,title:"Wheat Flour",price:45,image:"wheatflour.jpg",category:"Bakery"}
+    ];
+
+    // State
+    let filteredProducts = [...products];
+    let cart = JSON.parse(localStorage.getItem('cart')) || {};
+
+    // DOM elements
+    const productListEl = document.getElementById("product-list");
+    const searchInput = document.getElementById("search-input");
+    const categoryFilter = document.getElementById("category-filter");
+    const cartBtn = document.getElementById("cart-btn");
+    const cartSidebar = document.getElementById("cart-sidebar");
+    const cartCloseBtn = document.getElementById("cart-close-btn");
+    const cartCountEl = document.getElementById("cart-count");
+    const cartItemsEl = document.getElementById("cart-items");
+    const cartTotalEl = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+    const modalOverlay = document.getElementById("modal-overlay");
+    const modalCloseBtn = document.getElementById("modal-close-btn");
+
+    // Helpers
+    function formatPrice(num) {
+      if (num == null || isNaN(num) || num <= 0) return '₹ as per your order';
+      return `₹${num.toFixed(2)}`;
+    }
+
+    // Render categories in filter dropdown
+    function renderCategories() {
+      const categories = Array.from(new Set(products.map(p => p.category))).sort();
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
+    }
+
+    // Render products list
+    function renderProducts() {
+      productListEl.innerHTML = "";
+      if (filteredProducts.length === 0) {
+        productListEl.innerHTML = "<p style='grid-column: 1/-1; text-align:center; font-weight:600;'>No products found.</p>";
+        return;
+      }
+      filteredProducts.forEach(product => {
+        const card = document.createElement("article");
+        card.className = "product";
+        card.setAttribute("tabindex", "0");
+        card.innerHTML = `
+          <img loading="lazy" src="${product.image}" alt="${product.title}">
+          <h3>${product.title}</h3>
+          <p>Price: ${product.priceMin && product.priceMax ? `₹${product.priceMin}-${product.priceMax} per kg` : formatPrice(product.price)}</p>
+          <button aria-label="Add ${product.title} to cart">Add to Cart</button>
+        `;
+        const btn = card.querySelector("button");
+        btn.addEventListener("click", () => addToCart(product.id));
+        productListEl.appendChild(card);
+      });
+    }
+
+    // Add item to cart
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      const priceToUse = (product.priceMin && product.priceMax) ? product.priceMin : product.price || 0;
+      if (cart[productId]) {
+        cart[productId].quantity++;
+      } else {
+        cart[productId] = { id: product.id, title: product.title, price: priceToUse, image: product.image, quantity: 1 };
+      }
+      saveCart();
+      updateCartUI();
+      openCartSidebar();
+    }
+
+    // Remove from cart
+    function removeFromCart(productId) {
+      delete cart[productId];
+      saveCart();
+      updateCartUI();
+    }
+
+    // Change item quantity
+    function changeQuantity(productId, delta) {
+      const item = cart[productId];
+      if (!item) return;
+      item.quantity += delta;
+      if (item.quantity < 1) {
+        removeFromCart(productId);
+      } else {
+        saveCart();
+      }
+      updateCartUI();
+    }
+
+    // Calculate total
+    function calculateTotal() {
+      return Object.values(cart).reduce((total, item) => total + item.price * item.quantity, 0);
+    }
+
+    // Save cart to localStorage
+    function saveCart() {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    // Render cart UI
+    function updateCartUI() {
+      // Update cart count
+      const count = Object.values(cart).reduce((a, c) => a + c.quantity, 0);
+      if (count > 0) {
+        cartCountEl.style.display = "inline-block";
+        cartCountEl.textContent = count;
+        checkoutBtn.disabled = false;
+      } else {
+        cartCountEl.style.display = "none";
+        checkoutBtn.disabled = true;
+      }
+
+      // Render cart items
+      cartItemsEl.innerHTML = "";
+      if (count === 0) {
+        cartItemsEl.innerHTML = "<p class='cart-empty'>Your cart is empty.</p>";
+        cartTotalEl.textContent = "Total: ₹0.00";
+        return;
+      }
+      for (const [id, item] of Object.entries(cart)) {
+        const cartItem = document.createElement("div");
+        cartItem.className = "cart-item";
+        cartItem.innerHTML = `
+          <img src="${item.image}" alt="${item.title}" />
+          <div class="cart-item-info">
+            <h4 class="cart-item-title">${item.title}</h4>
+            <div class="cart-item-price">₹${item.price.toFixed(2)}</div>
+            <div class="cart-item-qty" aria-label="Quantity of ${item.title}">
+              <button aria-label="Decrease quantity" class="qty-btn qty-decrease">−</button>
+              <div class="qty-number">${item.quantity}</div>
+              <button aria-label="Increase quantity" class="qty-btn qty-increase">+</button>
+              <button aria-label="Remove ${item.title} from cart" class="remove-cart-item">×</button>
+            </div>
+          </div>
+        `;
+        // Event listeners
+        cartItem.querySelector(".qty-increase").addEventListener("click", () => changeQuantity(id, 1));
+        cartItem.querySelector(".qty-decrease").addEventListener("click", () => changeQuantity(id, -1));
+        cartItem.querySelector(".remove-cart-item").addEventListener("click", () => removeFromCart(id));
+        cartItemsEl.appendChild(cartItem);
+      }
+      cartTotalEl.textContent = `Total: ₹${calculateTotal().toFixed(2)}`;
+    }
+
+    // Open and close cart sidebar
+    function openCartSidebar() {
+      cartSidebar.classList.add("open");
+      cartSidebar.setAttribute('aria-hidden', 'false');
+      trapFocus(cartSidebar);
+    }
+    function closeCartSidebar() {
+      cartSidebar.classList.remove("open");
+      cartSidebar.setAttribute('aria-hidden', 'true');
+      releaseFocusTrap();
+    }
+
+    // Filter products by search and category
+    function filterProducts() {
+      const searchTerm = searchInput.value.trim().toLowerCase();
+      const category = categoryFilter.value;
+      filteredProducts = products.filter(product => {
+        const matchesSearch =
+          product.title.toLowerCase().includes(searchTerm) ||
+          product.category.toLowerCase().includes(searchTerm);
+        const matchesCategory = category === "all" ? true : product.category === category;
+        return matchesSearch && matchesCategory;
+      });
+      renderProducts();
+    }
+
+    // Checkout simulation
+    function checkout() {
+      cart = {};
+      saveCart();
+      updateCartUI();
+      closeCartSidebar();
+      modalOverlay.classList.add("active");
+      modalCloseBtn.focus();
+    }
+
+    // Accessibility: trap focus inside a container
+    let lastFocusedElement;
+    function trapFocus(element) {
+      lastFocusedElement = document.activeElement;
+      const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusableElements.length === 0) return;
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length -1];
+
+      function handleTrap(e) {
+        if(e.key === "Tab") {
+          if(e.shiftKey) {
+            if(document.activeElement === firstFocusable) {
+              e.preventDefault();
+              lastFocusable.focus();
+            }
+          } else {
+            if(document.activeElement === lastFocusable) {
+              e.preventDefault();
+              firstFocusable.focus();
+            }
+          }
+        }
+        if(e.key === 'Escape') {
+          closeCartSidebar();
+          cartBtn.focus();
+        }
+      }
+
+      element.addEventListener('keydown', handleTrap);
+      firstFocusable.focus();
+      element._trapHandler = handleTrap;
+    }
+    function releaseFocusTrap() {
+      if(!cartSidebar._trapHandler) return;
+      cartSidebar.removeEventListener('keydown', cartSidebar._trapHandler);
+      if(lastFocusedElement) lastFocusedElement.focus();
+    }
+
+    // Event listeners
+    cartBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openCartSidebar();
+    });
+    cartCloseBtn.addEventListener("click", closeCartSidebar);
+    checkoutBtn.addEventListener("click", checkout);
+    modalCloseBtn.addEventListener("click", () => {
+      modalOverlay.classList.remove("active");
+      cartBtn.focus();
+    });
+
+    searchInput.addEventListener("input", () => {
+      filterProducts();
+    });
+    categoryFilter.addEventListener("change", () => {
+      filterProducts();
+    });
+
+    // Init
+    renderCategories();
+    renderProducts();
+    updateCartUI();
+  })();
+</script>
+
+</body>
+</html>
