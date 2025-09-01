@@ -967,7 +967,7 @@
       {id:140,title:"nabti richeese",price:10,image:"nabti richeese.jpg",category:"Snacks"},
       {id:141,title:"munch max",price:20,image:"munch max.jpg",category:"Snacks"},
       {id:142,title:"nabati pink lawa",price:10,image:"nabati pink lawa.jpg",category:"Snacks"},
-      {id:143,title:"nabati richoco",price:10,image:"nabti richoco .jpg",category:"Snacks"},
+      {id:143,title:"nabati richoco",price:10,image:"nabati richoco .jpg",category:"Snacks"},
       {id:144,title:"nabati cocojawa",price:10,image:"nabvati cocojawa.jpg",category:"Snacks"},
       {id:145,title:"nestle classic",price:10,image:"nestle cl;asdsic.jpg",category:"Snacks"},
       {id:146,title:"nestle milkmaid",price:147,image:"nestle milkmaid.jpg",category:"Snacks"},
@@ -1289,14 +1289,39 @@
       }, 500);
     }
     
-    // Checkout simulation
-    function checkout() {
-      cart = {};
-      saveCart();
-      updateCartUI();
-      closeCartSidebar();
-      modalOverlay.classList.add("active");
-      modalCloseBtn.focus();
+    // Generate WhatsApp message from cart
+    function generateWhatsAppMessage() {
+      let message = "Hello, I would like to place the following order:\n\n";
+      
+      // Add each item to the message
+      for (const [id, item] of Object.entries(cart)) {
+        message += `- ${item.title} (Qty: ${item.quantity}) - ₹${item.price.toFixed(2)}\n`;
+      }
+      
+      // Add total
+      message += `\nTotal: ₹${calculateTotal().toFixed(2)}\n\n`;
+      message += "Thank you!";
+      
+      return encodeURIComponent(message);
+    }
+    
+    // Checkout via WhatsApp to specific number
+    function checkoutViaWhatsApp() {
+      if (Object.keys(cart).length === 0) {
+        showToast("Your cart is empty");
+        return;
+      }
+      
+      // Generate WhatsApp message
+      const message = generateWhatsAppMessage();
+      
+      // Open WhatsApp with pre-filled message to specific number
+      const phoneNumber = "9745544623";
+      const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+      window.open(whatsappURL, '_blank');
+      
+      // Show notification that WhatsApp is opening
+      showToast("Opening WhatsApp with your order details...");
     }
     
     // Theme toggle
@@ -1372,7 +1397,7 @@
     });
     
     cartCloseBtn.addEventListener("click", closeCartSidebar);
-    checkoutBtn.addEventListener("click", checkout);
+    checkoutBtn.addEventListener("click", checkoutViaWhatsApp);
     modalCloseBtn.addEventListener("click", () => {
       modalOverlay.classList.remove("active");
       cartBtn.focus();
